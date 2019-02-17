@@ -16,7 +16,7 @@ to run. Contains:
 */
 type Config struct {
 	APIKey       string `json:"apiKey"`
-	RefreshTimer int    `json:"refreshTimer"`
+	RefreshTimer uint64 `json:"refreshTimer"`
 	DB           DB     `json:"database"`
 }
 
@@ -30,37 +30,32 @@ type DB struct {
 }
 
 // CreateConfig adds information from a configuration file to a Config struct.
-func CreateConfig() (Config, error) {
+func CreateConfig() Config {
 	var config Config
 	jsonFile, err := ioutil.ReadFile("./config.json")
 	if err != nil {
 		utils.HandleError("Config", "CreateConfig", err)
-		return config, err
 	}
 
 	err = json.Unmarshal(jsonFile, &config)
 	if err != nil {
 		utils.HandleError("Config", "CreateConfig", err)
-		return config, err
 	}
 
 	if config.APIKey == "" {
 		err = errors.New("API key missing")
 		utils.HandleError("Config", "CreateConfig", err)
-		return config, err
 	}
 
 	if config.RefreshTimer == 0 {
 		err = errors.New("Refresh timer missing")
 		utils.HandleError("Config", "CreateConfig", err)
-		return config, err
 	}
 
 	if (DB{} == config.DB) {
 		err = errors.New("Database configuration missing")
 		utils.HandleError("Config", "CreateConfig", err)
-		return config, err
 	}
 
-	return config, nil
+	return config
 }

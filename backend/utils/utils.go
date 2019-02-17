@@ -1,6 +1,9 @@
 package utils
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 /*HandleError logs an error that occurred in the application
  * Receives:
@@ -10,4 +13,5 @@ import "fmt"
  */
 func HandleError(controller, method string, err error) {
 	fmt.Printf("ERROR | [%s - %s] %s\n", controller, method, err)
+	os.Exit(1)
 }
