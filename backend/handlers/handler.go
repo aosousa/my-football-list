@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 
-	"../models"
+	"github.com/aosousa/my-football-list/models"
 	"github.com/jasonlvhit/gocron"
 )
 
@@ -17,9 +17,8 @@ var config models.Config
 /*InitConfig adds information from a configuration file to a Config struct
  * that will be used throughout the application.
  */
-func InitConfig() (models.Config, error) {
-	config, _ = models.CreateConfig()
-	return config, nil
+func InitConfig() {
+	config = models.CreateConfig()
 }
 
 /*StartCronJob starts a cron job that will update the database every 30 minutes

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 
-	"../utils"
+	"github.com/aosousa/my-football-list/utils"
 )
 
 /*Config struct contains all the necessary configurations for the back-end

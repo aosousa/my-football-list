@@ -5,17 +5,15 @@ import (
 	"net/http"
 	"os"
 
-	h "./handlers"
+	h "github.com/aosousa/my-football-list/handlers"
+	"github.com/gorilla/handlers"
+	"github.com/rs/cors"
 )
 
 func init() {
 	// set up Config struct before performing any queries
 	fmt.Println("Configuration file: Loading")
-	_, err := h.InitConfig()
-	if err != nil {
-		fmt.Println("Failed to load configuration file. Check the logs for more information.")
-		os.Exit(1)
-	}
+	h.InitConfig()
 	fmt.Println("Configuration file: OK")
 
 	// TODO: initialize database through Config struct
@@ -30,6 +28,16 @@ func main() {
 
 	// start HTTP server that will handle all API requests
 	router := NewRouter()
+
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:8080"},
+		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Cache-Control", "Pragma", "Origin", "Authorization", "Content-Type", "X-Requested-With", "Expiry"},
+	})
+
+	routerHandler := c.Handler(router)
+
 	fmt.Println("Serving on port 8080")
-	http.ListenAndServe(":8080", router)
+	http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, routerHandler))
 }

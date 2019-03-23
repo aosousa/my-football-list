@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	m "./models"
+	m "github.com/aosousa/my-football-list/models"
 )
 
 /*NewRouter creates a new mux Router with the routes defined
