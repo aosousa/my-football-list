@@ -14,9 +14,12 @@ func init() {
 	// set up Config struct before performing any queries
 	fmt.Println("Configuration file: Loading")
 	h.InitConfig()
-	fmt.Println("Configuration file: OK")
+	fmt.Printf("Configuration file: OK\n\n")
 
-	// TODO: initialize database through Config struct
+	// initialize database through Config struct
+	fmt.Println("System database: Checking")
+	h.InitDatabase()
+	fmt.Printf("System database: OK\n\n")
 }
 
 func main() {
