@@ -6,6 +6,7 @@ package models
  * Country (string) - Country of the league
  * Season (int) - Year in which the current season in the league started
  * LogoURL (string) - URL of the logo of the league
+ * FlagURL (string) - URL of the flag of the league's country
  */
 type League struct {
 	LeagueID int    `json:"leagueId"`
@@ -13,6 +14,7 @@ type League struct {
 	Country  string `json:"country"`
 	Season   int    `json:"season"`
 	LogoURL  string `json:"logoUrl"`
+	FlagURL  string `json:"flagUrl"`
 }
 
 // Leagues represents a slice of League structs

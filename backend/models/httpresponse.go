@@ -8,7 +8,7 @@ package models
  */
 type HTTPResponse struct {
 	Success bool        `json:"success"`
-	Rows    int         `json:"int"`
+	Rows    int         `json:"rows"`
 	Data    interface{} `json:"data"`
 	Error   string      `json:"error"`
 }
