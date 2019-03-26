@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/aosousa/my-football-list/models"
@@ -43,12 +44,14 @@ func InitDatabase() {
 	db, err = sql.Open("mysql", sqlStmt)
 	if err != nil {
 		utils.HandleError("Handler", "InitDatabase", err)
+		os.Exit(1)
 	}
 
 	// because sql.Open does not actually open a connection, we need to validate DSN data
 	err = db.Ping()
 	if err != nil {
 		utils.HandleError("Handler", "InitDatabase", err)
+		os.Exit(1)
 	}
 }
 

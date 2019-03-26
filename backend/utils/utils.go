@@ -1,6 +1,9 @@
 package utils
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 /*HandleError logs an error that occurred in the application
  * Receives:
@@ -9,6 +12,9 @@ import "fmt"
  * err (error) - Error that occurred
  */
 func HandleError(controller, method string, err error) {
-	fmt.Printf("ERROR | [%s - %s]\n", controller, method)
+	currentTime := time.Now()
+	currentTimeFmt := currentTime.Format("2006-01-02 15:04:05")
+
+	fmt.Printf("%s ERROR in %s (%s)\n", currentTimeFmt, method, controller)
 	fmt.Println(err)
 }

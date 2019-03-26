@@ -15,9 +15,14 @@ import (
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/test", test).Methods("GET")
+
+	// Auth methods
 	router.HandleFunc("/signup", h.Signup).Methods("POST")
 	router.HandleFunc("/login", h.Login).Methods("POST")
 	router.HandleFunc("/logout", h.Logout).Methods("POST")
+
+	// League methods
+	router.HandleFunc("/leagues", h.GetAllLeagues).Methods("GET")
 
 	return router
 }

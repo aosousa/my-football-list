@@ -107,18 +107,25 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		user         m.User
 		loginSuccess bool
 		statusCode   int
+		responseBody m.HTTPResponse
 	)
 
 	session, err := store.Get(r, "session-token")
 	if err != nil {
 		utils.HandleError("Auth", "Login", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.HandleError("Auth", "Login", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
 	}
 
-	compareUser := GetUserByUsername(user.Username)
+	compareUser, err := GetUserByUsername(user.Username)
+	if err != nil {
+		utils.HandleError("Auth", "Login", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+	}
 
 	passwordHashMatch := checkPasswordHash(user.Password, compareUser.Password)
 	if passwordHashMatch {
@@ -129,7 +136,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		loginSuccess, statusCode = false, 401
 	}
 
-	responseBody := m.HTTPResponse{
+	responseBody = m.HTTPResponse{
 		Success: loginSuccess,
 		Data:    loginSuccess,
 		Rows:    1,
@@ -149,9 +156,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
  * Body: m.HTTPResponse
  */
 func Logout(w http.ResponseWriter, r *http.Request) {
+	var responseBody m.HTTPResponse
+
 	session, err := store.Get(r, "session-token")
 	if err != nil {
 		utils.HandleError("Auth", "Logout", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
 	}
 
 	// revoke user's authentication
@@ -161,15 +171,16 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	err = session.Save(r, w)
 	if err != nil {
 		utils.HandleError("Auth", "Logout", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
 	}
 
-	body := m.HTTPResponse{
+	responseBody = m.HTTPResponse{
 		Success: true,
 		Data:    true,
 		Rows:    0,
 	}
 
-	SetResponse(w, http.StatusOK, body)
+	SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*CheckAuthStatus is the function that checks whether or not the user is logged in the platform.
@@ -177,14 +188,17 @@ func Logout(w http.ResponseWriter, r *http.Request) {
  *
  * Receives: http.ResponseWriter and http.Request
  *
- * Returns: bool - Status of the user's authentication
+ * Returns: bool, bool - Status of the user's authentication
  */
-func CheckAuthStatus(w http.ResponseWriter, r *http.Request) bool {
+func CheckAuthStatus(w http.ResponseWriter, r *http.Request) (bool, bool) {
 	session, err := store.Get(r, "session-token")
 	if err != nil {
 		utils.HandleError("Auth", "CheckAuthStatus", err)
+		return false, false
 	}
 
 	// check if the user is authenticated
-	return session.Values["authenticated"].(bool)
+	auth, ok := session.Values["authenticated"].(bool)
+
+	return auth, ok
 }

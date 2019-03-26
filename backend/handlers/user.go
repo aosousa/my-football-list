@@ -11,15 +11,16 @@ import (
  *
  * Returns:
  * User - User struct found
- * err - Descreiption of error found during execution (or nil otherwise)
+ * err - Description of error found during execution (or nil otherwise)
  */
-func GetUserByUsername(username string) m.User {
+func GetUserByUsername(username string) (m.User, error) {
 	var u m.User
 
 	err := db.QueryRow("SELECT userId, username, password, email FROM tbl_user WHERE username = ?", username).Scan(&u.UserID, &u.Username, &u.Password, &u.Email)
 	if err != nil {
 		utils.HandleError("User", "Single", err)
+		return u, err
 	}
 
-	return u
+	return u, nil
 }
