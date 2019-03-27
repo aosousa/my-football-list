@@ -1,3 +1,5 @@
+################ GOLANG SECTION ################
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -13,3 +15,43 @@
 
 # Configuration file
 config.json
+
+################ ANGULAR SECTION ################
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+
+# Dependencies
+/node-modules
+
+# IDEs and Editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db

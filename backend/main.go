@@ -26,8 +26,8 @@ func main() {
 	// start cron job that will update the database periodically
 	// according to the refresh timer set in the configuration file
 	go func() {
-		h.StartCronJob()
-		// h.SaveTeams("96")
+		// h.StartCronJob()
+		// h.SaveTeams("300")
 	}()
 
 	// start HTTP server that will handle all API requests
