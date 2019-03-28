@@ -19,9 +19,10 @@ func NewRouter() *mux.Router {
 
 	// League methods
 	router.HandleFunc("/leagues", h.GetAllLeagues).Methods("GET")
+	router.HandleFunc("/leagues/{id}/fixtures", h.GetLeagueFixtures).Methods("GET")
 
 	// Fixture methods
-	router.HandleFunc("/team/{id}/fixtures", h.GetTeamFixtures).Methods("GET")
+	router.HandleFunc("/teams/{id}/fixtures", h.GetTeamFixtures).Methods("GET")
 
 	return router
 }

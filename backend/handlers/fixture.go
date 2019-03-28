@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-/*GetTeamFixtures queries the databse for a team's fixtures.
+/*GetTeamFixtures queries the database for a team's fixtures.
  *
  * Receives: http.ResponseWriter and http.Request
  * Request method: GET
