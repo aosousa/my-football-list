@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -60,13 +59,84 @@ func InitDatabase() {
  */
 func StartCronJob() {
 	scheduler := gocron.NewScheduler()
-	scheduler.Every(config.RefreshTimer).Minutes().Do(updateMatches)
+	scheduler.Every(config.RefreshTimer).Minutes().Do(UpdateFixtures)
 	<-scheduler.Start()
 }
 
-// Add new matches and update old ones in the database
-func updateMatches() {
-	fmt.Println("testing cron")
+// Adds new matches and update old ones in the database.
+func UpdateFixtures() {
+	var (
+		fixtures, objMap map[string]interface{}
+		queryURL         string
+	)
+
+	queryURL = baseURL + "fixtures/live"
+
+	req, err := http.NewRequest("GET", queryURL, nil)
+	if err != nil {
+		utils.HandleError("Fixture", "UpdateFixtures", err)
+	}
+
+	req.Header.Set("X-RapidAPI-Key", config.APIKey)
+	req.Header.Set("Accept", "application/json")
+
+	// call RapidAPI
+	res, err := http.DefaultClient.Do(req)
+	if res.StatusCode != 200 || err != nil {
+		utils.HandleError("Fixture", "UpdateFixtures", err)
+	}
+	defer res.Body.Close()
+
+	content, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		utils.HandleError("Fixture", "UpdateFixtures", err)
+	}
+
+	if err := json.Unmarshal(content, &objMap); err != nil {
+		utils.HandleError("Fixture", "UpdateFixtures", err)
+	}
+
+	fixtures = objMap["api"].(map[string]interface{})["fixtures"].(map[string]interface{})
+
+	stmtIns, err := db.Prepare("INSERT INTO tbl_fixture (apiFixtureId, date, league, round, homeTeam, homeTeamGoals, awayTeam, awayTeamGoals, status, elapsed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		utils.HandleError("Fixture", "UpdateFixtures", err)
+	}
+	defer stmtIns.Close()
+
+	stmtUpd, err := db.Prepare("UPDATE tbl_fixture SET homeTeamGoals = ?, awayTeamGoals = ?,status = ?, elapsed = ? WHERE apiFixtureId = ?")
+	if err != nil {
+		utils.HandleError("Fixture", "UpdateFixtures", err)
+	}
+
+	for k, v := range fixtures {
+		var (
+			date, round, status                                                                   string
+			apiFixtureID, leagueID, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, elapsed int
+			fixtureExists                                                                         bool
+		)
+
+		apiFixtureID, _ = strconv.Atoi(k)
+		date = v.(map[string]interface{})["event_date"].(string)
+		leagueID, _ = strconv.Atoi(v.(map[string]interface{})["league_id"].(string))
+		round = v.(map[string]interface{})["round"].(string)
+		homeTeamID, _ = strconv.Atoi(v.(map[string]interface{})["homeTeam_id"].(string))
+		homeTeamGoals, _ = strconv.Atoi(v.(map[string]interface{})["goalsHomeTeam"].(string))
+		awayTeamID, _ = strconv.Atoi(v.(map[string]interface{})["awayTeam_id"].(string))
+		awayTeamGoals, _ = strconv.Atoi(v.(map[string]interface{})["goalsAwayTeam"].(string))
+		status = v.(map[string]interface{})["statusShort"].(string)
+		elapsed, _ = strconv.Atoi(v.(map[string]interface{})["elapsed"].(string))
+
+		fixtureRow := db.QueryRow("SELECT EXISTS(SELECT fixtureId FROM tbl_fixture WHERE apiFixtureId = " + k + ")")
+		_ = fixtureRow.Scan(&fixtureExists)
+
+		// execute update statement if fixture already exists, insert statement otherwise
+		if fixtureExists {
+			_, _ = stmtUpd.Exec(homeTeamGoals, awayTeamGoals, status, elapsed, apiFixtureID)
+		} else {
+			_, _ = stmtIns.Exec(apiFixtureID, date, leagueID, round, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, status, elapsed)
+		}
+	}
 }
 
 /*func SaveLeagues() {
@@ -129,7 +199,7 @@ func updateMatches() {
 			utils.HandleError("Handler", "SaveLeagues", err)
 		}
 	}
-}*/
+}
 
 func SaveTeams(leagueID string) {
 	var (
@@ -183,7 +253,7 @@ func SaveTeams(leagueID string) {
 
 		_, _ = stmtIns.Exec(intID, name, logoUrl)
 	}
-}
+}*/
 
 /*SetResponse sets the response to be sent to the user in any API endpoints.
  * Receives:

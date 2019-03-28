@@ -3,7 +3,7 @@ package models
 /*Fixture represents a football match. Fields:
  * FixtureID (int) - Unique ID of the fixture
  * APIFixtureID (int) - Unique ID of the fixture received from the API
- * Timestamp (string) - Fixture start timestamp
+ * Date (string) - Fixture start date
  * League (League) - League struct with information about the fixture's league
  * Round (string) - League round in which the fixture is played
  * HomeTeam (Team) - Team struct with information about the fixture's home team
@@ -16,7 +16,7 @@ package models
 type Fixture struct {
 	FixtureID     int    `json:"fixtureId"`
 	APIFixtureID  int    `json:"apiFixtureId"`
-	Timestamp     string `json:"timestamp"`
+	Date          string `json:"date"`
 	League        League `json:"league"`
 	Round         string `json:"round"`
 	HomeTeam      Team   `json:"homeTeam"`

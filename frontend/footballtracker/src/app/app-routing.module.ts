@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Components
-import { AppComponent } from './components/app/app.component';
+import { AppComponent } from './modules/app.component';
 
 // Services
 

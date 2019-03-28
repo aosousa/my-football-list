@@ -17,7 +17,14 @@
 		"lib": [
 			"es2018",
 			"dom"
-		]
+		],
+		"paths": {
+			"@app/*": ["app/*"],
+			"@env/*": ["app/environments/*"],
+			"@components/*": ["app/components/*"],
+			"@models/*": ["app/models/*"],
+			"@services/*": ["app/services/*"],
+		}
 	},
 	"angularCompilerOptions": {
 		"enableIvy": true
