@@ -26,7 +26,7 @@ func main() {
 	// start cron job that will update the database periodically
 	// according to the refresh timer set in the configuration file
 	go func() {
-		h.UpdateFixtures()
+		// h.UpdateFixtures()
 		h.StartCronJob()
 	}()
 

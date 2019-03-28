@@ -1,12 +1,9 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gorilla/mux"
 
 	h "github.com/aosousa/my-football-list/handlers"
-	m "github.com/aosousa/my-football-list/models"
 )
 
 /*NewRouter creates a new mux Router with the routes defined
@@ -14,7 +11,6 @@ import (
  */
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/test", test).Methods("GET")
 
 	// Auth methods
 	router.HandleFunc("/signup", h.Signup).Methods("POST")
@@ -24,15 +20,8 @@ func NewRouter() *mux.Router {
 	// League methods
 	router.HandleFunc("/leagues", h.GetAllLeagues).Methods("GET")
 
+	// Fixture methods
+	router.HandleFunc("/team/{id}/fixtures", h.GetTeamFixtures).Methods("GET")
+
 	return router
-}
-
-func test(w http.ResponseWriter, r *http.Request) {
-	body := m.HTTPResponse{
-		Success: true,
-		Data:    "test",
-		Rows:    0,
-	}
-
-	h.SetResponse(w, http.StatusOK, body)
 }

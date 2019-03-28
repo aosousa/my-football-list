@@ -190,7 +190,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
  *
  * Returns: bool, bool - Status of the user's authentication
  */
-func CheckAuthStatus(w http.ResponseWriter, r *http.Request) (bool, bool) {
+func checkAuthStatus(w http.ResponseWriter, r *http.Request) (bool, bool) {
 	session, err := store.Get(r, "session-token")
 	if err != nil {
 		utils.HandleError("Auth", "CheckAuthStatus", err)

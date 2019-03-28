@@ -18,7 +18,7 @@ import (
  */
 func GetAllLeagues(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
-	auth, ok := CheckAuthStatus(w, r)
+	auth, ok := checkAuthStatus(w, r)
 	if !auth || !ok {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
