@@ -63,7 +63,7 @@ func StartCronJob() {
 	<-scheduler.Start()
 }
 
-// Adds new matches and update old ones in the database.
+// UpdateFixtures adds new matches and update old ones in the database.
 func UpdateFixtures() {
 	var (
 		fixtures, objMap map[string]interface{}
@@ -121,9 +121,20 @@ func UpdateFixtures() {
 		leagueID, _ = strconv.Atoi(v.(map[string]interface{})["league_id"].(string))
 		round = v.(map[string]interface{})["round"].(string)
 		homeTeamID, _ = strconv.Atoi(v.(map[string]interface{})["homeTeam_id"].(string))
-		homeTeamGoals, _ = strconv.Atoi(v.(map[string]interface{})["goalsHomeTeam"].(string))
+
+		// test type assertion before proceeding since goals can be a nil value
+		homeTeamGoalsStr, ok := v.(map[string]interface{})["goalsHomeTeam"].(string)
+		if ok {
+			homeTeamGoals, _ = strconv.Atoi(homeTeamGoalsStr)
+		}
+
 		awayTeamID, _ = strconv.Atoi(v.(map[string]interface{})["awayTeam_id"].(string))
-		awayTeamGoals, _ = strconv.Atoi(v.(map[string]interface{})["goalsAwayTeam"].(string))
+
+		// test type assertion before proceeding since goals can be a nil value
+		awayTeamGoalsStr, ok := v.(map[string]interface{})["goalsAwayTeam"].(string)
+		if ok {
+			awayTeamGoals, _ = strconv.Atoi(awayTeamGoalsStr)
+		}
 		status = v.(map[string]interface{})["statusShort"].(string)
 		elapsed, _ = strconv.Atoi(v.(map[string]interface{})["elapsed"].(string))
 
@@ -254,6 +265,76 @@ func SaveTeams(leagueID string) {
 		_, _ = stmtIns.Exec(intID, name, logoUrl)
 	}
 }*/
+
+func SaveFixtures(leagueID string) {
+	var (
+		objMap   map[string]interface{}
+		queryURL string
+	)
+
+	queryURL = baseURL + "fixtures/league/" + leagueID
+
+	req, err := http.NewRequest("GET", queryURL, nil)
+	if err != nil {
+		utils.HandleError("Handler", "SaveFixtures", err)
+	}
+
+	req.Header.Set("X-RapidAPI-Key", config.APIKey)
+	req.Header.Set("Accept", "application/json")
+
+	// call RapidAPI
+	res, err := http.DefaultClient.Do(req)
+	if res.StatusCode != 200 || err != nil {
+		utils.HandleError("Handler", "SaveFixtures", err)
+	}
+	defer res.Body.Close()
+
+	content, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		utils.HandleError("Handler", "SaveFixtures", err)
+	}
+
+	if err := json.Unmarshal(content, &objMap); err != nil {
+		utils.HandleError("Handler", "SaveFixtures", err)
+	}
+
+	fixtures := objMap["api"].(map[string]interface{})["fixtures"].(map[string]interface{})
+
+	stmtIns, err := db.Prepare("INSERT INTO tbl_fixture (apiFixtureId, date, league, round, homeTeam, homeTeamGoals, awayTeam, awayTeamGoals, status, elapsed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		utils.HandleError("Handler", "SaveFixtures", err)
+	}
+	defer stmtIns.Close()
+
+	for k, v := range fixtures {
+		var (
+			apiFixtureID, leagueID, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, elapsed int
+			date, round, status                                                                   string
+		)
+
+		apiFixtureID, _ = strconv.Atoi(k)
+		date = v.(map[string]interface{})["event_date"].(string)
+		leagueID, _ = strconv.Atoi(v.(map[string]interface{})["league_id"].(string))
+		round = v.(map[string]interface{})["round"].(string)
+		homeTeamID, _ = strconv.Atoi(v.(map[string]interface{})["homeTeam_id"].(string))
+
+		homeTeamGoalsStr, ok := v.(map[string]interface{})["goalsHomeTeam"].(string)
+		if ok {
+			homeTeamGoals, _ = strconv.Atoi(homeTeamGoalsStr)
+		}
+
+		awayTeamID, _ = strconv.Atoi(v.(map[string]interface{})["awayTeam_id"].(string))
+
+		awayTeamGoalsStr, ok := v.(map[string]interface{})["goalsAwayTeam"].(string)
+		if ok {
+			awayTeamGoals, _ = strconv.Atoi(awayTeamGoalsStr)
+		}
+		status = v.(map[string]interface{})["statusShort"].(string)
+		elapsed, _ = strconv.Atoi(v.(map[string]interface{})["elapsed"].(string))
+
+		_, _ = stmtIns.Exec(apiFixtureID, date, leagueID, round, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, status, elapsed)
+	}
+}
 
 /*SetResponse sets the response to be sent to the user in any API endpoints.
  * Receives:

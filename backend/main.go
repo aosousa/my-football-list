@@ -27,7 +27,8 @@ func main() {
 	// according to the refresh timer set in the configuration file
 	go func() {
 		// h.UpdateFixtures()
-		h.StartCronJob()
+		// h.StartCronJob()
+		// h.SaveFixtures("167")
 	}()
 
 	// start HTTP server that will handle all API requests

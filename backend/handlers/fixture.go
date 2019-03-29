@@ -41,7 +41,8 @@ func GetTeamFixtures(w http.ResponseWriter, r *http.Request) {
 	INNER JOIN tbl_league ON tbl_fixture.league = tbl_league.leagueId
 	INNER JOIN tbl_team AS homeTeam ON tbl_fixture.homeTeam = homeTeam.teamId
 	INNER JOIN tbl_team AS awayTeam ON tbl_fixture.awayTeam = awayTeam.teamId
-	WHERE homeTeam = ` + teamID + " OR awayTeam = " + teamID)
+	WHERE homeTeam = ` + teamID + ` OR awayTeam = ` + teamID + `
+	ORDER BY apiFixtureId ASC`)
 	if err != nil {
 		utils.HandleError("Fixture", "GetTeamFixtures", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)

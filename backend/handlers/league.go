@@ -103,7 +103,8 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 	INNER JOIN tbl_league ON tbl_fixture.league = tbl_league.leagueId
 	INNER JOIN tbl_team AS homeTeam ON tbl_fixture.homeTeam = homeTeam.teamId
 	INNER JOIN tbl_team AS awayTeam ON tbl_fixture.awayTeam = awayTeam.teamId
-	WHERE league = ` + leagueID)
+	WHERE league = ` + leagueID + `
+	ORDER BY apiFixtureId ASC`)
 	if err != nil {
 		utils.HandleError("League", "GetLeagueFixtures", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
@@ -146,5 +147,5 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 		Rows:    len(fixtures),
 	}
 
-	SetResponse(w, http.StatusInternalServerError, responseBody)
+	SetResponse(w, http.StatusOK, responseBody)
 }
