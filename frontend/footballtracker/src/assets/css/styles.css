@@ -1,0 +1,191 @@
+a {
+    cursor: pointer !important;
+}
+
+/* NAVBAR */
+.navbar {
+    padding: 0 !important;
+}
+
+.navbar-nav {
+    flex-direction: row !important;
+}
+
+.navbar-right {
+    float: right;
+    margin-right: 0;
+}
+
+.nav > li > a {
+    padding: 12px !important;
+}
+
+.navbar-brand {
+    color: white;
+    padding: 10px !important;
+}
+
+.navbar-default {
+    background-color: #27ae60;
+    border-color: #27ae60;
+    border: 0;
+    -webkit-box-shadow: 0 2px 20px 2px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 20px 2px rgba(0, 0, 0, 0.25);
+    color: white;
+}
+
+.navbar-default .navbar-nav > li,
+.navbar-default .navbar-text {
+    color: white !important;
+}
+
+
+.navbar-default .navbar-nav > li > a {
+    color: #dadada !important;
+    font-size: 14px;
+    -webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -ms-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+
+.navbar-default .navbar-nav > li > a > span.fa {
+    color: #BCDCC7;
+    -webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -ms-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+
+.navbar-default .navbar-nav > .open > a:focus {
+    background-color: transparent;
+    color: white;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: rgb(255, 255, 255) !important;
+    text-shadow: 0px 2px 12px rgba(0, 0, 0, 0.25);
+    -webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -ms-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+
+.navbar-default .navbar-nav > li > a:hover > span.fa,
+.navbar-default .navbar-nav > li > a:focus > span.fa {
+    color: rgb(255, 255, 255) !important;
+    -webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -ms-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    background: transparent !important;
+    color: rgb(255, 255, 255) !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.navbar-default .navbar-nav > .active > a > span.fa,
+.navbar-default .navbar-nav > .active > a:hover > span.fa,
+.navbar-default .navbar-nav > .active > a:focus > span.fa {
+    color: rgb(255, 255, 255) !important;
+}
+
+.navbar-header {
+    background: none !important;
+}
+
+.navbar-fixed-top {
+    position: fixed !important;
+    right: 0;
+    left: 0;
+    z-index: 10
+}
+
+.navbar-fixed-top .navbar-collapse {
+    flex-basis: inherit !important;
+    max-height: 100% !important;
+}
+
+.navbar-nav > li > .dropdown-menu {
+    background-color: rgb(22, 130, 164) !important;
+    border: 0 !important;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    box-shadow: 0 3px 5px rgb(68, 68, 68);
+    margin-left: 10px;
+}
+
+.navbar-nav > li > .dropdown-menu > li > a {
+    border-bottom: 0;
+    color: #fff;
+    padding: 10px;
+}
+
+.dropdown-menu > .active > a {
+    background: transparent !important;
+    color: white;
+    font-weight: 700;
+    text-shadow: 0 0 6px #fff;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > a:hover {
+    background-color: white !important;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: rgb(22, 130, 164) !important;
+    opacity: 0.8;
+    width: auto;
+}
+
+.dropdown-item {
+    color: white !important;
+    padding: 0.55rem 1rem 0.55rem 0.75rem !important;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    background: transparent !important;
+    color: white;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #fff !important;
+}
+
+.nav-pills.nav-justified > li > a {
+    font-weight: bold;
+}
+
+a.active,
+.nav-pills.nav-justified > li.active > a {
+    background-color: #038CA8;
+    color: white;
+}
+
+.nav-stacked {
+    border-left: 1px solid #337AB7;
+}
+
+.nav-pills.nav-stacked > li > a {
+    border-radius: 0 4px 4px 0;
+    font-size: 13px;
+}
+
+.nav-justified > li {
+    float: none;
+}
+
+.nav-justified {
+    width: 100% !important;
+}

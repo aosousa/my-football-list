@@ -98,7 +98,94 @@ export class FootballService {
             ).toPromise();
     }
 
-    // User / Authentication methods
+    // Fixture methods
+
+    /**
+     * Get fixtures in a given date
+     * @param {string} date Date in YYYY-mm-dd format
+     */
+    getFixturesByDate(date: string) {
+        return this._http.get(`${this.config_link}/fixtures/${date}`, this.options)
+            .pipe(
+                retry(3),
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    // User methods
+
+    /**
+     * Get a user's information
+     * @param {number} id Id of the user
+     */
+    getUser(id: number) {
+        return this._http.get(`${this.config_link}/users/${id}`, this.options)
+            .pipe(
+                retry(3),
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    /**
+     * Update a user's information
+     * @param {number} id Id of the user
+     * @param {any} userinfo New information for the user
+     */
+    updateUser(id: number, userinfo: any) {
+        return this._http.put(`${this.config_link}/users/${id}`, userinfo, this.options)
+            .pipe(
+                retry(3),
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    // User/Fixture methods
+
+    /**
+     * Get a user's fixtures
+     * @param {number} id Id of the user
+     */
+    getUserFixtures(id: number) {
+        return this._http.get(`${this.config_link}/users/${id}/fixtures`, this.options)
+            .pipe(
+                retry(3),
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    /**
+     * Create a user_fixture row
+     * @param {number} id Id of the user 
+     * @param {any} fixtureInfo Information about the fixture (id, status)
+     */
+    createUserFixture(id: number, fixtureInfo: any) {
+        return this._http.post(`${this.config_link}/users/${id}/fixtures`, fixtureInfo, this.options)
+            .pipe(
+                retry(3),
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    /**
+     * Delete a user_fixture row
+     * @param {number} id Id of the user
+     * @param {number} fixtureId Id of the fixture
+     */
+    deleteUserFixture(id: number, fixtureId: number) {
+        return this._http.delete(`${this.config_link}/users/${id}/fixtures/${fixtureId}`, this.options)
+            .pipe(
+                retry(3),
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    // Authentication methods
 
     /**
      * Log the user in

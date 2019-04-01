@@ -1,0 +1,17 @@
+<nav class="navbar navbar-default navbar-expand-md navbar-fixed-top">
+    <div class="navbar-header">
+        <a routerLink="/" class="navbar-brand">Football Tracker</a>
+    </div>
+	<div class="navbar-collapse justify-content-end">
+        <ul *ngIf="loginStatus != 'true'" class="navbar-nav navbar-right nav">
+            <li>
+                <a routerLink="/signup" class="btn btn-md btn-secondary"><span class="fa fa-plus-circle"></span> Sign Up</a>
+            </li>
+        </ul>
+        <ul *ngIf="loginStatus != 'true'" class="navbar-nav navbar-right nav">
+            <li>
+                <a class="btn btn-md btn-primary"><span class="fa fa-sign-in"></span> Login</a>
+            </li>
+        </ul>
+	</div>
+</nav>

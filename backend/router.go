@@ -24,5 +24,15 @@ func NewRouter() *mux.Router {
 	// Team methods
 	router.HandleFunc("/teams/{id}/fixtures", h.GetTeamFixtures).Methods("GET")
 
+	// Fixture methods
+	router.HandleFunc("/fixtures/{date}", h.GetDateFixtures).Methods("GET")
+
+	// User and User/Fixture methods
+	router.HandleFunc("/users/{id}", h.GetUser).Methods("GET")
+	router.HandleFunc("/users/{id}/fixtures", h.GetUserFixtures).Methods("GET")
+	router.HandleFunc("/users/{id}/fixtures", h.CreateUserFixture).Methods("POST")
+	router.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT")
+	router.HandleFunc("/users/{id}/fixtures/{fixtureId}", h.DeleteUserFixture).Methods("DELETE")
+
 	return router
 }

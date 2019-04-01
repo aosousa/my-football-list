@@ -7,5 +7,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 	year = new Date().getFullYear()
-	title = 'footballtracker';
 }

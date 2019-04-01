@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
@@ -66,11 +68,14 @@ func StartCronJob() {
 // UpdateFixtures adds new matches and update old ones in the database.
 func UpdateFixtures() {
 	var (
-		fixtures, objMap map[string]interface{}
-		queryURL         string
+		fixtures, objMap      map[string]interface{}
+		currentDate, queryURL string
 	)
 
-	queryURL = baseURL + "fixtures/live"
+	unformattedCurrentDate := time.Now()
+	currentDate = unformattedCurrentDate.Format("2006-01-02")
+
+	queryURL = baseURL + "fixtures/date/" + currentDate
 
 	req, err := http.NewRequest("GET", queryURL, nil)
 	if err != nil {
@@ -113,7 +118,7 @@ func UpdateFixtures() {
 		var (
 			date, round, status                                                                   string
 			apiFixtureID, leagueID, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, elapsed int
-			fixtureExists                                                                         bool
+			fixtureExists, leagueExists                                                           bool
 		)
 
 		apiFixtureID, _ = strconv.Atoi(k)
@@ -138,19 +143,39 @@ func UpdateFixtures() {
 		status = v.(map[string]interface{})["statusShort"].(string)
 		elapsed, _ = strconv.Atoi(v.(map[string]interface{})["elapsed"].(string))
 
-		fixtureRow := db.QueryRow("SELECT EXISTS(SELECT fixtureId FROM tbl_fixture WHERE apiFixtureId = " + k + ")")
-		_ = fixtureRow.Scan(&fixtureExists)
+		leagueRow := db.QueryRow("SELECT EXISTS(SELECT leagueId FROM tbl_league WHERE leagueId = " + v.(map[string]interface{})["league_id"].(string) + ")")
+		_ = leagueRow.Scan(&leagueExists)
 
-		// execute update statement if fixture already exists, insert statement otherwise
-		if fixtureExists {
-			_, _ = stmtUpd.Exec(homeTeamGoals, awayTeamGoals, status, elapsed, apiFixtureID)
-		} else {
-			_, _ = stmtIns.Exec(apiFixtureID, date, leagueID, round, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, status, elapsed)
+		// only execute insert or update statement if the league exists, otherwise ignore the fixture
+		if leagueExists {
+			fixtureRow := db.QueryRow("SELECT EXISTS(SELECT fixtureId FROM tbl_fixture WHERE apiFixtureId = " + k + ")")
+			_ = fixtureRow.Scan(&fixtureExists)
+
+			// execute update statement if fixture already exists, insert statement otherwise
+			if fixtureExists {
+				_, err = stmtUpd.Exec(homeTeamGoals, awayTeamGoals, status, elapsed, apiFixtureID)
+				if err != nil {
+					fmt.Println(v) // temporary, trying to find information about the teams leading to an error
+					utils.HandleError("Fixture", "UpdateFixtures", err)
+				}
+			} else {
+				_, err = stmtIns.Exec(apiFixtureID, date, leagueID, round, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, status, elapsed)
+				if err != nil {
+					fmt.Println(v) // temporary, trying to find information about the teams leading to an error
+					utils.HandleError("Fixture", "UpdateFixtures", err)
+				}
+			}
 		}
+	}
+
+	// TODO: change this to use the logging service
+	if err == nil {
+		currentTime := utils.GetCurrentDateTime()
+		fmt.Printf("[%s] Fixtures updated successfully.\n", currentTime)
 	}
 }
 
-/*func SaveLeagues() {
+func SaveLeagues() {
 	var (
 		objMap   map[string]interface{}
 		queryURL string
@@ -264,7 +289,7 @@ func SaveTeams(leagueID string) {
 
 		_, _ = stmtIns.Exec(intID, name, logoUrl)
 	}
-}*/
+}
 
 func SaveFixtures(leagueID string) {
 	var (
@@ -306,10 +331,17 @@ func SaveFixtures(leagueID string) {
 	}
 	defer stmtIns.Close()
 
+	stmtUpd, err := db.Prepare("UPDATE tbl_fixture SET homeTeamGoals = ?, awayTeamGoals = ?,status = ?, elapsed = ? WHERE apiFixtureId = ?")
+	if err != nil {
+		utils.HandleError("Fixture", "UpdateFixtures", err)
+	}
+	defer stmtUpd.Close()
+
 	for k, v := range fixtures {
 		var (
 			apiFixtureID, leagueID, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, elapsed int
 			date, round, status                                                                   string
+			fixtureExists                                                                         bool
 		)
 
 		apiFixtureID, _ = strconv.Atoi(k)
@@ -332,7 +364,15 @@ func SaveFixtures(leagueID string) {
 		status = v.(map[string]interface{})["statusShort"].(string)
 		elapsed, _ = strconv.Atoi(v.(map[string]interface{})["elapsed"].(string))
 
-		_, _ = stmtIns.Exec(apiFixtureID, date, leagueID, round, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, status, elapsed)
+		fixtureRow := db.QueryRow("SELECT EXISTS(SELECT fixtureId FROM tbl_fixture WHERE apiFixtureId = " + k + ")")
+		_ = fixtureRow.Scan(&fixtureExists)
+
+		// execute update statement if fixture already exists, insert statement otherwise
+		if fixtureExists {
+			_, _ = stmtUpd.Exec(homeTeamGoals, awayTeamGoals, status, elapsed, apiFixtureID)
+		} else {
+			_, _ = stmtIns.Exec(apiFixtureID, date, leagueID, round, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, status, elapsed)
+		}
 	}
 }
 

@@ -12,9 +12,16 @@ import (
  * err (error) - Error that occurred
  */
 func HandleError(controller, method string, err error) {
-	currentTime := time.Now()
-	currentTimeFmt := currentTime.Format("2006-01-02 15:04:05")
+	currentTime := GetCurrentDateTime()
 
-	fmt.Printf("%s ERROR in %s (%s)\n", currentTimeFmt, method, controller)
+	fmt.Printf("%s ERROR in %s (%s)\n", currentTime, method, controller)
 	fmt.Println(err)
+}
+
+/*GetCurrentDateTime returns the current date/time
+ * Returns: string - Current date/time in YYYY-mm-dd HH:ii:ss format
+ */
+func GetCurrentDateTime() string {
+	currentTime := time.Now()
+	return currentTime.Format("2006-01-02 15:04:05")
 }

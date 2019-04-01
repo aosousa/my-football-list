@@ -9,8 +9,8 @@ package models
  */
 type UserFixture struct {
 	UserFixtureID int     `json:"userFixtureId"`
-	User          User    `json:"user"`
-	Fixture       Fixture `json:"fixture"`
+	User          User    `json:"userId"`
+	Fixture       Fixture `json:"fixtureId"`
 	Status        int     `json:"status"`
 }
 

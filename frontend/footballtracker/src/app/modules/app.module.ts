@@ -1,6 +1,7 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserModule, Title } from '@angular/platform-browser';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { AppRoutingModule } from '@app/app-routing.module';
+import { HttpModule } from '@angular/http';
 
 import { environment } from 'environments/environment';
 
@@ -9,6 +10,8 @@ import { CallbackPipe } from '@app/callback.pipe';
 
 // Components
 import { AppComponent } from './app.component';
+import { FooterComponent } from '@components/footer/footer.component';
+import { NavbarComponent } from '@components/navbar/navbar.component';
 
 // Services
 import { AuthGuard } from '@services/auth.guard';
@@ -22,13 +25,27 @@ export function ConfigLoader(configService: ConfigService) {
 @NgModule({
 	declarations: [
 		AppComponent,
-		CallbackPipe
+		CallbackPipe,
+		FooterComponent,
+		NavbarComponent
 	],
 	imports: [
 		AppRoutingModule,
-		BrowserModule
+		BrowserModule,
+		HttpModule
 	],
-	providers: [],
+	providers: [
+		AuthGuard,
+		ConfigService,
+		FootballService,
+		Title,
+		{
+			provide: APP_INITIALIZER,
+			useFactory: ConfigLoader,
+			deps: [ConfigService],
+			multi: true
+		}
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }
