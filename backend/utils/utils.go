@@ -14,7 +14,7 @@ import (
 func HandleError(controller, method string, err error) {
 	currentTime := GetCurrentDateTime()
 
-	fmt.Printf("%s ERROR in %s (%s)\n", currentTime, method, controller)
+	fmt.Printf("[%s] ERROR in %s (%s)\n", currentTime, method, controller)
 	fmt.Println(err)
 }
 

@@ -2,15 +2,19 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Components
-import { AppComponent } from './modules/app.component';
+import { IndexComponent } from '@components/index/index.component';
+import { SignupComponent } from '@components/signup/signup.component';
 
 // Services
 
 const routes: Routes = [
     {
-        path: 'test',
-        pathMatch: 'full',
-        component: AppComponent
+        path: 'signup',
+        component: SignupComponent,
+    },
+    {
+        path: '',
+        component: IndexComponent
     }
 ]
 

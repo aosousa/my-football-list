@@ -35,7 +35,7 @@ func main() {
 	router := NewRouter()
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:8080"},
+		AllowedOrigins:   []string{"http://localhost:4200"},
 		AllowCredentials: true,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Cache-Control", "Pragma", "Origin", "Authorization", "Content-Type", "X-Requested-With", "Expiry"},

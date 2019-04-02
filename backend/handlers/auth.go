@@ -58,17 +58,22 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	var (
 		user           m.User
 		hashedPassword string
+		responseBody   m.HTTPResponse
 	)
 
 	// get request body
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.HandleError("Auth", "Signup", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
 	// hash user's password
 	hashedPassword, err := hashPassword(user.Password)
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
 	user.Password = hashedPassword
@@ -76,14 +81,18 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	stmtIns, err := db.Prepare("INSERT INTO tbl_user (username, password, email) VALUES (?, ?, ?)")
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
 	_, err = stmtIns.Exec(user.Username, user.Password, user.Email)
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
-	responseBody := m.HTTPResponse{
+	responseBody = m.HTTPResponse{
 		Success: true,
 		Data:    true,
 		Rows:    1,

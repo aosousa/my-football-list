@@ -2,6 +2,10 @@ a {
     cursor: pointer !important;
 }
 
+div.wrap {
+    padding-top: 50px;
+}
+
 /* NAVBAR */
 .navbar {
     padding: 0 !important;

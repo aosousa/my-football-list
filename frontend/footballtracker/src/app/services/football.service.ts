@@ -3,7 +3,7 @@ import { Http, Headers, Response } from '@angular/http';
 
 // RxJS imports
 import { BehaviorSubject } from 'rxjs';
-import { map, timeout, retry } from 'rxjs/operators';
+import { map, timeout } from 'rxjs/operators';
 
 // Models
 import { Config } from '@models/config';
@@ -62,7 +62,6 @@ export class FootballService {
     getAllLeagues() {
         return this._http.get(`${this.config_link}/leagues`, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -76,7 +75,6 @@ export class FootballService {
     getLeagueFixtures(id: number) {
         return this._http.get(`${this.config_link}/leagues/${id}/fixtures`, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -92,7 +90,6 @@ export class FootballService {
     getTeamFixtures(id: number) {
         return this._http.get(`${this.config_link}/teams/${id}/fixtures`, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -107,7 +104,6 @@ export class FootballService {
     getFixturesByDate(date: string) {
         return this._http.get(`${this.config_link}/fixtures/${date}`, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -122,7 +118,6 @@ export class FootballService {
     getUser(id: number) {
         return this._http.get(`${this.config_link}/users/${id}`, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -136,7 +131,6 @@ export class FootballService {
     updateUser(id: number, userinfo: any) {
         return this._http.put(`${this.config_link}/users/${id}`, userinfo, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -151,7 +145,6 @@ export class FootballService {
     getUserFixtures(id: number) {
         return this._http.get(`${this.config_link}/users/${id}/fixtures`, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -165,7 +158,6 @@ export class FootballService {
     createUserFixture(id: number, fixtureInfo: any) {
         return this._http.post(`${this.config_link}/users/${id}/fixtures`, fixtureInfo, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -179,7 +171,6 @@ export class FootballService {
     deleteUserFixture(id: number, fixtureId: number) {
         return this._http.delete(`${this.config_link}/users/${id}/fixtures/${fixtureId}`, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -195,7 +186,6 @@ export class FootballService {
     login(userInfo: any) {
         return this._http.post(`${this.config_link}/login`, userInfo, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -208,7 +198,6 @@ export class FootballService {
     logout() {
         return this._http.post(`${this.config_link}/logout`, {}, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
@@ -222,7 +211,6 @@ export class FootballService {
     signup(signupInfo: any) {
         return this._http.post(`${this.config_link}/signup`, signupInfo, this.options)
             .pipe(
-                retry(3),
                 timeout(5000),
                 map((resp: Response) => resp.json())
             ).toPromise();
