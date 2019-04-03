@@ -217,6 +217,32 @@ export class FootballService {
     }
 
     /**
+     * Check if a username is taken
+     * @param {any} userInfo Object with username
+     * @returns {Promise<any>}
+     */
+    checkUsernameExistence(userInfo: any) {
+        return this._http.post(`${this.config_link}/users/username-existence`, userInfo, this.options)
+            .pipe(
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    /**
+     * Check if an email is taken
+     * @param {any} userInfo Object with email
+     * @returns {Promise<any>}
+     */
+    checkEmailExistence(userInfo: any) {
+        return this._http.post(`${this.config_link}/users/email-existence`, userInfo, this.options)
+            .pipe(
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    /**
      * Check if the user is authenticated in the platform
      * @returns {number}
      */

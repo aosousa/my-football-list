@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gorilla/sessions"
@@ -63,6 +64,14 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	// get request body
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		utils.HandleError("Auth", "Signup", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// check if required fields are empty
+	if utils.IsEmpty(user.Username) || utils.IsEmpty(user.Email) || utils.IsEmpty(user.Password) {
+		err := errors.New("Required field is empty")
 		utils.HandleError("Auth", "Signup", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
 		return

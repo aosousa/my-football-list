@@ -25,3 +25,8 @@ func GetCurrentDateTime() string {
 	currentTime := time.Now()
 	return currentTime.Format("2006-01-02 15:04:05")
 }
+
+// IsEmpty checks if a required field is empty
+func IsEmpty(field string) bool {
+	return field == ""
+}
