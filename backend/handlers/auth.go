@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
@@ -149,6 +150,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if passwordHashMatch {
 		loginSuccess, statusCode = true, 200
 		session.Values["authenticated"] = true
+		session.Values["userID"] = compareUser.UserID
 		session.Save(r, w)
 	} else {
 		loginSuccess, statusCode = false, 401
@@ -184,6 +186,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 	// revoke user's authentication
 	session.Values["authenticated"] = false
+	session.Values["userID"] = 0
 	session.Options.MaxAge = -1
 
 	err = session.Save(r, w)
@@ -199,6 +202,28 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	SetResponse(w, http.StatusOK, responseBody)
+}
+
+/*Gets the ID of the current logged in user.
+ *
+ * Receives: http.ResponseWriter and http.Request
+ *
+ * Returns:
+ * int - ID of the current logged in user
+ * error - Error in case one occurred (nil otherwise)
+ */
+func getUserIDFromSession(r *http.Request) (string, error) {
+	var userID string
+
+	session, err := store.Get(r, "session-token")
+	if err != nil {
+		utils.HandleError("Auth", "GetUserIDFromSession", err)
+		return userID, err
+	}
+
+	userID = strconv.Itoa(session.Values["userID"].(int))
+
+	return userID, nil
 }
 
 /*CheckAuthStatus is the function that checks whether or not the user is logged in the platform.

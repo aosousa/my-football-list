@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/aosousa/my-football-list/models"
+	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jasonlvhit/gocron"
@@ -23,8 +24,9 @@ const (
 )
 
 var (
-	config models.Config
-	db     *sql.DB
+	config            models.Config
+	db                *sql.DB
+	lastFixtureUpdate string
 )
 
 /*InitConfig adds information from a configuration file to a Config struct
@@ -72,6 +74,7 @@ func UpdateFixtures() {
 		currentDate, queryURL string
 	)
 
+	lastFixtureUpdate = utils.GetCurrentDateTime()
 	unformattedCurrentDate := time.Now()
 	currentDate = unformattedCurrentDate.Format("2006-01-02")
 
@@ -155,13 +158,11 @@ func UpdateFixtures() {
 			if fixtureExists {
 				_, err = stmtUpd.Exec(homeTeamGoals, awayTeamGoals, status, elapsed, apiFixtureID)
 				if err != nil {
-					fmt.Println(v) // temporary, trying to find information about the teams leading to an error
 					utils.HandleError("Fixture", "UpdateFixtures", err)
 				}
 			} else {
 				_, err = stmtIns.Exec(apiFixtureID, date, leagueID, round, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, status, elapsed)
 				if err != nil {
-					fmt.Println(v) // temporary, trying to find information about the teams leading to an error
 					utils.HandleError("Fixture", "UpdateFixtures", err)
 				}
 			}
@@ -170,9 +171,33 @@ func UpdateFixtures() {
 
 	// TODO: change this to use the logging service
 	if err == nil {
-		currentTime := utils.GetCurrentDateTime()
-		fmt.Printf("[%s] Fixtures updated successfully.\n", currentTime)
+		fmt.Printf("[%s] Fixtures updated successfully.\n", lastFixtureUpdate)
 	}
+}
+
+/*GetLastFixtureUpdate returns the date/time of the last fixture update in YYYY-mm-dd format.
+ *
+ * Receives: http.ResponseWriter and http.Request
+ * Request method: GET
+ *
+ * Response
+ * Content-Type: application/json
+ * Body: m.HTTPResponse
+ */
+func GetLastFixtureUpdate(w http.ResponseWriter, r *http.Request) {
+	// check user's authentication status before proceeding
+	auth, ok := checkAuthStatus(w, r)
+	if !auth || !ok {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
+	responseBody := m.HTTPResponse{
+		Success: true,
+		Data:    lastFixtureUpdate,
+	}
+
+	SetResponse(w, http.StatusOK, responseBody)
 }
 
 func SaveLeagues() {

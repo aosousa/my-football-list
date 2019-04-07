@@ -102,7 +102,18 @@ export class FootballService {
      * @param {string} date Date in YYYY-mm-dd format
      */
     getFixturesByDate(date: string) {
-        return this._http.get(`${this.config_link}/fixtures/${date}`, this.options)
+        return this._http.get(`${this.config_link}/fixtures/by-date/${date}`, this.options)
+            .pipe(
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    /**
+     * Get date/time of the last fixture update in YYYY-mm-dd format
+     */
+    getLastFixtureUpdate() {
+        return this._http.get(`${this.config_link}/fixtures/last-update`, this.options)
             .pipe(
                 timeout(5000),
                 map((resp: Response) => resp.json())
@@ -152,11 +163,10 @@ export class FootballService {
 
     /**
      * Create a user_fixture row
-     * @param {number} id Id of the user 
      * @param {any} fixtureInfo Information about the fixture (id, status)
      */
-    createUserFixture(id: number, fixtureInfo: any) {
-        return this._http.post(`${this.config_link}/users/${id}/fixtures`, fixtureInfo, this.options)
+    createUserFixture(fixtureInfo: any) {
+        return this._http.post(`${this.config_link}/users/fixtures`, fixtureInfo, this.options)
             .pipe(
                 timeout(5000),
                 map((resp: Response) => resp.json())
@@ -165,11 +175,10 @@ export class FootballService {
 
     /**
      * Delete a user_fixture row
-     * @param {number} id Id of the user
-     * @param {number} fixtureId Id of the fixture
+     * @param {number} id Id of the user fixture row
      */
-    deleteUserFixture(id: number, fixtureId: number) {
-        return this._http.delete(`${this.config_link}/users/${id}/fixtures/${fixtureId}`, this.options)
+    deleteUserFixture(id: number) {
+        return this._http.delete(`${this.config_link}/user-fixtures/${id}`, this.options)
             .pipe(
                 timeout(5000),
                 map((resp: Response) => resp.json())

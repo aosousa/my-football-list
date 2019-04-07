@@ -1,18 +1,19 @@
 package models
 
-/*UserFixture represents the struct related to the associative table
- * used to store a user's fixtures records. Fields:
- * UserFixtureID (int) - Unique ID of the user's fixture record
- * User (User) - User struct
- * Fixture (Fixture) - Fixture struct
- * Status (int) - Status of the user's relation with the fixture (1 = Watching, 2 = Watched, 3 = Interested in Watching)
- */
+// UserFixture represents the struct related to the associative table
 type UserFixture struct {
-	UserFixtureID int     `json:"userFixtureId"`
-	User          User    `json:"userId"`
-	Fixture       Fixture `json:"fixtureId"`
-	Status        int     `json:"status"`
+	UserFixtureID int     `json:"userFixtureId"` // Unique ID of the user's fixture record
+	UserID        int     `json:"userId"`        // User ID
+	Fixture       Fixture `json:"fixtureId"`     // Fixture struct
+	Status        int     `json:"status"`        // User's relation with the fixture (1 = Watching, 2 = Watched, 3 = Interested in Watching)
 }
 
 // UserFixtures represents a slice of UserFixture structs
 type UserFixtures []UserFixture
+
+// UserFixtureRequest is the struct used to create a user fixture association through the POST endpoint
+type UserFixtureRequest struct {
+	UserFixtureID int `json:"userFixtureId"` // Unique ID of the user's fixture record (or nil when creating a new row instead of updating)
+	Fixture       int `json:"fixtureId"`     // Fixture ID
+	Status        int `json:"status"`        // User's relation with the fixture (1 = Watching, 2 = Watched, 3 = Interested in Watching)
+}

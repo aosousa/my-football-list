@@ -1,27 +1,45 @@
 <div class="container align-middle">
     <h1 class="text-center">Sign Up</h1>
 
-    <div class="row">
-        <div class="offset-lg-4 col-lg-4">
-            <label for="signup-username" class="control-label">Username</label>
-            <input type="text" id="signup-username" class="form-control" [(ngModel)]="signupInfo.username">
+    <form [formGroup]="registerForm" (ngSubmit)="signup()">
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-5">
+                <label for="signup-username" class="control-label">Username</label>
+                <input type="text" id="signup-username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+                <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                    <div *ngIf="f.username.errors.required">Username is required</div>
+                    <div *ngIf="f.username.errors.usernameExists">An account with that username already exists</div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="offset-lg-4 col-lg-4">
-            <label for="signup-email" class="control-label">E-mail Address</label>
-            <input type="email" id="signup-email" class="form-control" [(ngModel)]="signupInfo.email">
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-5">
+                <label for="signup-email" class="control-label">E-mail Address</label>
+                <input type="email" id="signup-email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                    <div *ngIf="f.email.errors.required">E-mail address is required</div>
+                    <div *ngIf="f.email.errors.emailExists">An account with that e-mail address already exists</div>
+                    <div *ngIf="f.email.errors.pattern">Invalid e-mail format</div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="offset-lg-4 col-lg-4">
-            <label for="signup-password" class="control-label">Password</label>
-            <input type="password" id="signup-password" class="form-control" [(ngModel)]="signupInfo.password">
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-5">
+                <label for="signup-password" class="control-label">Password</label>
+                <input type="password" id="signup-password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="offset-lg-4 col-lg-4">
-            <button type="button" class="btn btn-success" (click)="signup()">Confirm</button>
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-1">
+                <button class="btn btn-success" type="submit">Confirm</button>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-primary" routerLink="/">Cancel</button>
+            </div>
         </div>
-    </div>
+    </form>
 </div>

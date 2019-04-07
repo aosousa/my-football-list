@@ -29,7 +29,27 @@ func GetUserByUsername(username string) (m.User, error) {
 	return u, nil
 }
 
-/*GetUserByEmail queries for a User row in the database through email.
+/*Queries for a User row in the database through username.
+ * Receives:
+ * username (string) - User's username
+ *
+ * Returns:
+ * int8 - Number of Users with that email (0 or 1 max)
+ * error - Description of error found during execution (or nil otherwise)
+ */
+func getUserByUsername(username string) (int8, error) {
+	var userCount int8
+
+	err := db.QueryRow("SELECT count(*) AS count FROM tbl_user WHERE username = ?", username).Scan(&userCount)
+	if err != nil {
+		utils.HandleError("User", "getUserByUsername", err)
+		return userCount, err
+	}
+
+	return userCount, nil
+}
+
+/*Queries for a User row in the database through email.
  * Receives:
  * email (string) - User's email
  *
@@ -42,7 +62,7 @@ func getUserByEmail(email string) (int8, error) {
 
 	err := db.QueryRow("SELECT count(*) AS count FROM tbl_user WHERE email = ?", email).Scan(&userCount)
 	if err != nil {
-		utils.HandleError("User", "GetUserByEmail", err)
+		utils.HandleError("User", "getUserByEmail", err)
 		return userCount, err
 	}
 
@@ -160,6 +180,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
  */
 func CheckUsernameExistence(w http.ResponseWriter, r *http.Request) {
 	var (
+		userCount    int8
 		user         m.User
 		responseBody m.HTTPResponse
 	)
@@ -171,7 +192,7 @@ func CheckUsernameExistence(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := GetUserByUsername(user.Username)
+	userCount, err := getUserByUsername(user.Username)
 	if err != nil {
 		utils.HandleError("User", "CheckUsernameExistence", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
@@ -180,7 +201,7 @@ func CheckUsernameExistence(w http.ResponseWriter, r *http.Request) {
 
 	responseBody = m.HTTPResponse{
 		Success: true,
-		Rows:    1,
+		Rows:    int(userCount),
 	}
 
 	SetResponse(w, http.StatusOK, responseBody)

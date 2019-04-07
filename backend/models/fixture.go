@@ -1,30 +1,19 @@
 package models
 
-/*Fixture represents a football match. Fields:
- * FixtureID (int) - Unique ID of the fixture
- * APIFixtureID (int) - Unique ID of the fixture received from the API
- * Date (string) - Fixture start date
- * League (League) - League struct with information about the fixture's league
- * Round (string) - League round in which the fixture is played
- * HomeTeam (Team) - Team struct with information about the fixture's home team
- * HomeTeamGoals (int) - Number of goals scored by the home team
- * AwayTeam (Team) - Team struct with information about the fixture's away team
- * AwayTeamGoals (int) - Number of goals scored by the away team
- * Status (string) - Status of the fixture (not started, ongoing, finished, etc.)
- * Elapsed (int) - Number of minutes played in the fixture
- */
+//Fixture represents a football match.
 type Fixture struct {
-	FixtureID     int    `json:"fixtureId"`
-	APIFixtureID  int    `json:"apiFixtureId"`
-	Date          string `json:"date"`
-	League        League `json:"league"`
-	Round         string `json:"round"`
-	HomeTeam      Team   `json:"homeTeam"`
-	HomeTeamGoals int    `json:"homeTeamGoals"`
-	AwayTeam      Team   `json:"awayTeam"`
-	AwayTeamGoals int    `json:"awayTeamGoals"`
-	Status        string `json:"status"`
-	Elapsed       int    `json:"elapsed"`
+	FixtureID         int    `json:"fixtureId"`         // Unique ID of the fixture
+	APIFixtureID      int    `json:"apiFixtureId"`      // Unique ID of the fixture received from the API
+	Date              string `json:"date"`              // Fixture date
+	League            League `json:"league"`            // League struct with the information about the fixture's league
+	Round             string `json:"round"`             // League round in which the fixture is played
+	HomeTeam          Team   `json:"homeTeam"`          // Team struct with information about the fixture's home team
+	HomeTeamGoals     int    `json:"homeTeamGoals"`     // Number of goals scored by the home team
+	AwayTeam          Team   `json:"awayTeam"`          // Team struct with information about the fixture's away team
+	AwayTeamGoals     int    `json:"awayTeamGoals"`     // Number of goals scored by the away team
+	Status            string `json:"status"`            // Status of the fixture (not started, ongoing, finished, etc.)
+	Elapsed           int    `json:"elapsed"`           // Number of minutes played in the fixture
+	UserFixtureStatus int    `json:"userFixtureStatus"` // User's relationship with the fixture (1 = Watching, 2 = Watched, 3 = Interested in Watching)
 }
 
 // Fixtures represents a slice of Fixture structs
