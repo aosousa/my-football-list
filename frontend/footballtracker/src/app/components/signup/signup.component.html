@@ -9,6 +9,7 @@
                 <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                     <div *ngIf="f.username.errors.required">Username is required</div>
                     <div *ngIf="f.username.errors.usernameExists">An account with that username already exists</div>
+                    <div *ngIf="f.username.errors.pattern">Invalid characters in username</div>
                 </div>
             </div>
         </div>

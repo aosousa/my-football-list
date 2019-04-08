@@ -1,0 +1,42 @@
+<div class="container align-middle">
+    <h1 class="text-center">Login</h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-5">
+                <label for="login-username" class="control-label">Username</label>
+                <input type="text" id="login-username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+                <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                    <div *ngIf="f.username.errors.required">Username is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-5">
+                <label for="login-password" class="control-label">Password</label>
+                <input type="password" id="login-password" class="form-control" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group" style="padding: 0">
+            <div class="offset-lg-4 col-lg-4">
+                <a href="">Forgot your password?</a>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-1">
+                <button class="btn btn-success" type="submit">Confirm</button>
+            </div>
+            <div class="col-lg-2">
+                <button class="btn btn-primary" routerLink="/signup">Sign Up</button>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="offset-lg-4">
+                <flash-messages></flash-messages>
+            </div>
+        </div>
+    </form>
+</div>

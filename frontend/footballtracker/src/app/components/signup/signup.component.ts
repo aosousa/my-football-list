@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl, AbstractControlOptions, AsyncValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 // Services
 import { FootballService } from '@services/football.service';
@@ -17,7 +14,6 @@ import { FootballService } from '@services/football.service';
 export class SignupComponent implements OnInit {
     registerForm: FormGroup;
     submitted = false;
-    debouncer: any;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -26,7 +22,7 @@ export class SignupComponent implements OnInit {
         private _router: Router,
     ) { 
         this.registerForm = this._formBuilder.group({
-            username: ['', [Validators.required], this.usernameExistenceValidator.bind(this)],
+            username: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 \'\-]+$')], this.usernameExistenceValidator.bind(this)],
             email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')], this.emailExistenceValidator.bind(this)],
             password: ['', [Validators.required, Validators.minLength(6)]]
         });
@@ -66,15 +62,18 @@ export class SignupComponent implements OnInit {
 
         // stop here if form is invalid
         if (this.registerForm.invalid) {
+            console.log(this.registerForm.get('username').errors);
             return
         }
 
         this._footballService.signup(this.registerForm.value).then(response => {
             this.submitted = false;
             if (response.success) {
-                // TEMPORARY: redirect to /fixtures when that route exists and perform login
+                // TEMPORARY: redirect to /fixtures when that route exists
+                this._footballService.changeMessage('true');
+                this._footballService.changeUsernameSource(this.registerForm.value.username);
                 this._router.navigate(['/']);
-            } 
+            }
         });
     }
 }

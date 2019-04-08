@@ -193,3 +193,19 @@ a.active,
 .nav-justified {
     width: 100% !important;
 }
+
+.alert {
+    margin-bottom: 0 !important;
+}
+
+.flash-messages {
+    padding-left: 1em;
+}
+
+#flashMessages .flash-message {
+    display: none;
+}
+
+#flashMessages .flash-message:last-child {
+    display: block;
+}

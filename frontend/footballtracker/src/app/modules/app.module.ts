@@ -6,6 +6,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { environment } from 'environments/environment';
 
+// 3rd party
+import { FlashMessagesModule } from 'angular2-flash-messages';
+
 // Pipes
 import { CallbackPipe } from '@app/callback.pipe';
 
@@ -13,6 +16,7 @@ import { CallbackPipe } from '@app/callback.pipe';
 import { AppComponent } from './app.component';
 import { FooterComponent } from '@components/footer/footer.component';
 import { IndexComponent } from '@components/index/index.component';
+import { LoginComponent } from '@components/login/login.component';
 import { NavbarComponent } from '@components/navbar/navbar.component';
 import { SignupComponent } from '@components/signup/signup.component';
 
@@ -31,6 +35,7 @@ export function ConfigLoader(configService: ConfigService) {
 		CallbackPipe,
 		FooterComponent,
 		IndexComponent,
+		LoginComponent,
 		NavbarComponent,
 		SignupComponent
 	],
@@ -39,7 +44,8 @@ export function ConfigLoader(configService: ConfigService) {
 		BrowserModule,
 		HttpModule,
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		FlashMessagesModule.forRoot()
 	],
 	providers: [
 		AuthGuard,

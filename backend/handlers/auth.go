@@ -95,12 +95,32 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = stmtIns.Exec(user.Username, user.Password, user.Email)
+	result, err := stmtIns.Exec(user.Username, user.Password, user.Email)
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
+
+	// get user id
+	userID, err := result.LastInsertId()
+	if err != nil {
+		utils.HandleError("Auth", "Signup", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// create user session
+	session, err := store.Get(r, "session-token")
+	if err != nil {
+		utils.HandleError("Auth", "Login", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	session.Values["authenticated"] = true
+	session.Values["userID"] = userID
+	session.Save(r, w)
 
 	responseBody = m.HTTPResponse{
 		Success: true,
@@ -133,17 +153,20 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.HandleError("Auth", "Login", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.HandleError("Auth", "Login", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
 	compareUser, err := GetUserByUsername(user.Username)
 	if err != nil {
 		utils.HandleError("Auth", "Login", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		SetResponse(w, http.StatusOK, responseBody)
+		return
 	}
 
 	passwordHashMatch := checkPasswordHash(user.Password, compareUser.Password)
@@ -182,6 +205,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.HandleError("Auth", "Logout", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
 	// revoke user's authentication
@@ -193,6 +217,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.HandleError("Auth", "Logout", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
 	responseBody = m.HTTPResponse{

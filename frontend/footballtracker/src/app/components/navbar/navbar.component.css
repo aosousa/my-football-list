@@ -1,3 +1,8 @@
 .justify-content-end {
     margin-top: 2px !important;
 }
+
+a:hover {
+    color: white;
+    text-decoration: none;
+}
