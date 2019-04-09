@@ -48,17 +48,20 @@ export class LoginComponent implements OnInit {
 
         this._footballService.login(this.loginForm.value).then(response => {
             this.submitted = false;
+
             if (response.success) {
                 // TEMPORARY: redirect to /fixtures when that route exists
+                localStorage.setItem('username', this.loginForm.value.username);
+
                 this._footballService.changeMessage('true');
                 this._footballService.changeUsernameSource(this.loginForm.value.username);
                 this._router.navigate(['/']);
-            } else {
-                this._flashMessageService.show('Unsuccessful login. Please try again.', {
-                    cssClass: 'alert-danger',
-                    timeout: 5000
-                });
             }
+        }).catch(error => { 
+            this._flashMessageService.show('Unsuccessful login. Please try again.', {
+                cssClass: 'alert-danger',
+                timeout: 5000
+            });
         })
     }
 }

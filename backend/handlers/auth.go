@@ -182,7 +182,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	responseBody = m.HTTPResponse{
 		Success: loginSuccess,
 		Data:    loginSuccess,
-		Rows:    1,
 	}
 
 	SetResponse(w, statusCode, responseBody)

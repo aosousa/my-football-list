@@ -23,11 +23,11 @@ export class NavbarComponent implements OnInit {
     ngOnInit() {
         this._footballService.currentMessage.subscribe(message => this.loginStatus = message);
         this._footballService.usernameMessage.subscribe(message => this.username = message);
-        this.username = localStorage.getItem('username');
-
         const loginStatus = this._footballService.isAuthenticated();
+
         if (loginStatus >= 0) {
             this._footballService.changeMessage('true');
+            this.username = localStorage.getItem('username');
         } else {
             this._footballService.changeMessage('false');
             this._router.navigate(['/']);
@@ -42,9 +42,9 @@ export class NavbarComponent implements OnInit {
         this._footballService.logout().then(response => {
             if (response.success === true) {
                 localStorage.removeItem('username');
-
-                this._router.navigate(['']);
                 this._footballService.changeMessage('false');
+
+                this._router.navigate(['/']);
             }
         })
     }

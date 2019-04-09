@@ -6,3 +6,12 @@ a:hover {
     color: white;
     text-decoration: none;
 }
+
+.dropdown-menu {
+    margin-left: -3.6em !important;
+    margin-top: 0 !important;
+}
+
+.navbar-nav > li > .dropdown-menu {
+    background-color: #27ae60 !important;
+}

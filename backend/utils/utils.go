@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"fmt"
 	"time"
+
+	"github.com/aosousa/my-football-list/logger"
 )
 
 /*HandleError logs an error that occurred in the application
@@ -12,10 +13,7 @@ import (
  * err (error) - Error that occurred
  */
 func HandleError(controller, method string, err error) {
-	currentTime := GetCurrentDateTime()
-
-	fmt.Printf("[%s] ERROR in %s (%s)\n", currentTime, method, controller)
-	fmt.Println(err)
+	logger.Error(nil, logger.SetData("method", method), err)
 }
 
 /*GetCurrentDateTime returns the current date/time
