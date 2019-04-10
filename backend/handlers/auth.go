@@ -122,9 +122,14 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	session.Values["userID"] = userID
 	session.Save(r, w)
 
+	returnUser := m.User{
+		UserID:   int(userID),
+		Username: user.Username,
+	}
+
 	responseBody = m.HTTPResponse{
 		Success: true,
-		Data:    true,
+		Data:    returnUser,
 		Rows:    1,
 	}
 
@@ -143,10 +148,10 @@ func Signup(w http.ResponseWriter, r *http.Request) {
  */
 func Login(w http.ResponseWriter, r *http.Request) {
 	var (
-		user         m.User
-		loginSuccess bool
-		statusCode   int
-		responseBody m.HTTPResponse
+		user, returnUser m.User
+		loginSuccess     bool
+		statusCode       int
+		responseBody     m.HTTPResponse
 	)
 
 	session, err := store.Get(r, "session-token")
@@ -175,13 +180,18 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		session.Values["authenticated"] = true
 		session.Values["userID"] = compareUser.UserID
 		session.Save(r, w)
+
+		returnUser = m.User{
+			UserID:   compareUser.UserID,
+			Username: compareUser.Username,
+		}
 	} else {
 		loginSuccess, statusCode = false, 401
 	}
 
 	responseBody = m.HTTPResponse{
 		Success: loginSuccess,
-		Data:    loginSuccess,
+		Data:    returnUser,
 	}
 
 	SetResponse(w, statusCode, responseBody)

@@ -14,6 +14,7 @@ import { CallbackPipe } from '@app/callback.pipe';
 
 // Components
 import { AppComponent } from './app.component';
+import { FixturesComponent } from '@components/fixtures/fixtures.component';
 import { FooterComponent } from '@components/footer/footer.component';
 import { IndexComponent } from '@components/index/index.component';
 import { LoginComponent } from '@components/login/login.component';
@@ -24,6 +25,7 @@ import { SignupComponent } from '@components/signup/signup.component';
 import { AuthGuard } from '@services/auth.guard';
 import { ConfigService } from '@services/config.service';
 import { FootballService } from '@services/football.service';
+import { UtilsService } from '@services/utils.service';
 
 export function ConfigLoader(configService: ConfigService) {
 	return () => configService.loadConfig(environment.httpConfig)
@@ -33,6 +35,7 @@ export function ConfigLoader(configService: ConfigService) {
 	declarations: [
 		AppComponent,
 		CallbackPipe,
+		FixturesComponent,
 		FooterComponent,
 		IndexComponent,
 		LoginComponent,
@@ -52,6 +55,7 @@ export function ConfigLoader(configService: ConfigService) {
 		ConfigService,
 		FootballService,
 		Title,
+		UtilsService,
 		{
 			provide: APP_INITIALIZER,
 			useFactory: ConfigLoader,

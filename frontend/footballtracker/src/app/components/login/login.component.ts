@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
             if (response.success) {
                 // TEMPORARY: redirect to /fixtures when that route exists
                 localStorage.setItem('username', this.loginForm.value.username);
+                localStorage.setItem('userId', response.data.userId);
 
                 this._footballService.changeMessage('true');
                 this._footballService.changeUsernameSource(this.loginForm.value.username);

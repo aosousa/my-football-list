@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
+import { FlashMessagesService } from 'angular2-flash-messages';
 
 // Services
 import { FootballService } from '@services/football.service';
@@ -19,6 +20,7 @@ export class SignupComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _titleService: Title,
         private _footballService: FootballService,
+        private _flashMessageService: FlashMessagesService,
         private _router: Router,
     ) { 
         this.registerForm = this._formBuilder.group({
@@ -69,11 +71,18 @@ export class SignupComponent implements OnInit {
         this._footballService.signup(this.registerForm.value).then(response => {
             this.submitted = false;
             if (response.success) {
-                // TEMPORARY: redirect to /fixtures when that route exists
+                localStorage.setItem('username', this.registerForm.value.username);
+                localStorage.setItem('userId', response.data.userId);
+
                 this._footballService.changeMessage('true');
                 this._footballService.changeUsernameSource(this.registerForm.value.username);
-                this._router.navigate(['/']);
+                this._router.navigate(['/fixtures']);
             }
+        }).catch(error => {
+            this._flashMessageService.show('An error occurred while signing up. Please try again later.', {
+                cssClass: 'alert-danger',
+                timeout: 5000
+            })
         });
     }
 }

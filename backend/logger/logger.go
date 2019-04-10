@@ -98,8 +98,8 @@ func fileWriter(fileLog *FileLog) {
 		msgText += fmt.Sprint(v) + " "
 	}
 
-	folderPath = fmt.Sprintf("../logs/footballtracker/%s/%s", y, m)
-	filePath = fmt.Sprintf("../logs/footballtracker/%s/%s/%s.log", y, m, d)
+	folderPath = fmt.Sprintf("../../logs/footballtracker/%s/%s", y, m)
+	filePath = fmt.Sprintf("../../logs/footballtracker/%s/%s/%s.log", y, m, d)
 
 	// check if dir exists, otherwise create it
 	// if error report it in the command line, otherwise open the file for writing

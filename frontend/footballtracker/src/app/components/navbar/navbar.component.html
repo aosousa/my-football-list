@@ -2,7 +2,10 @@
     <div class="navbar-header">
         <a routerLink="/" class="navbar-brand">Football Tracker</a>
     </div>
-	<div class="navbar-collapse justify-content-end">
+	<div class="navbar-collapse">
+        <ul *ngIf="loginStatus == 'true'" class="navbar-nav nav">
+            <li><a routerLink="/fixtures"><span class="fa fa-futbol-o"></span> Fixtures</a></li>
+        </ul>
         <ul *ngIf="loginStatus != 'true'" class="navbar-nav navbar-right nav">
             <li>
                 <a routerLink="/signup"><span class="fa fa-plus-circle"></span> Sign Up</a>

@@ -5,7 +5,7 @@
         <div class="row form-group">
             <div class="offset-lg-4 col-lg-5">
                 <label for="signup-username" class="control-label">Username</label>
-                <input type="text" id="signup-username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+                <input type="text" id="signup-username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" maxlength="16">
                 <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                     <div *ngIf="f.username.errors.required">Username is required</div>
                     <div *ngIf="f.username.errors.usernameExists">An account with that username already exists</div>
@@ -40,6 +40,11 @@
             </div>
             <div class="col-lg-1">
                 <button class="btn btn-primary" routerLink="/">Cancel</button>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="offset-lg-4">
+                <flash-messages></flash-messages>
             </div>
         </div>
     </form>
