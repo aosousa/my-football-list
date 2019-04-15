@@ -258,4 +258,19 @@ export class FootballService {
     isAuthenticated(): number {
         return document.cookie.indexOf("session-token")
     }
+
+    // Contact methods
+
+    /**
+     * Send an email through contact form
+     * @param {any} emailInfo Object with required information (type, subject, message)
+     * @returns {Promise<any>}
+     */
+    sendEmail(emailInfo: any) {
+        return this._http.post(`${this.config_link}/contact`, emailInfo, this.options)
+            .pipe(
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
 }

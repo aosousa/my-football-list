@@ -13,13 +13,18 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
 import { CallbackPipe } from '@app/callback.pipe';
 
 // Components
+import { AboutComponent } from '@components/about/about.component';
 import { AppComponent } from './app.component';
+import { ContactComponent } from '@components/contact/contact.component';
 import { FixturesComponent } from '@components/fixtures/fixtures.component';
 import { FooterComponent } from '@components/footer/footer.component';
 import { IndexComponent } from '@components/index/index.component';
 import { LoginComponent } from '@components/login/login.component';
 import { NavbarComponent } from '@components/navbar/navbar.component';
+import { PrivacyPolicyComponent } from '@components/privacy-policy/privacy-policy.component';
+import { ProfileComponent } from '@components/profile/profile.component';
 import { SignupComponent } from '@components/signup/signup.component';
+import { TermsOfServiceComponent } from '@app/components/terms-of-service/terms-of-service.component';
 
 // Services
 import { AuthGuard } from '@services/auth.guard';
@@ -33,14 +38,19 @@ export function ConfigLoader(configService: ConfigService) {
 
 @NgModule({
 	declarations: [
+		AboutComponent,
 		AppComponent,
 		CallbackPipe,
+		ContactComponent,
 		FixturesComponent,
 		FooterComponent,
 		IndexComponent,
 		LoginComponent,
 		NavbarComponent,
-		SignupComponent
+		PrivacyPolicyComponent,
+		ProfileComponent,
+		SignupComponent,
+		TermsOfServiceComponent
 	],
 	imports: [
 		AppRoutingModule,

@@ -37,5 +37,8 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT")
 	router.HandleFunc("/user-fixtures/{id}", h.DeleteUserFixture).Methods("DELETE")
 
+	// Contact methods
+	router.HandleFunc("/contact", h.SendEmail).Methods("POST")
+
 	return router
 }

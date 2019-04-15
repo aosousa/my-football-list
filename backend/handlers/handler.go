@@ -77,6 +77,7 @@ func UpdateFixtures() {
 	lastFixtureUpdate = utils.GetCurrentDateTime()
 	unformattedCurrentDate := time.Now()
 	currentDate = unformattedCurrentDate.Format("2006-01-02")
+	// currentDate = "2019-04-14"
 
 	queryURL = baseURL + "fixtures/date/" + currentDate
 

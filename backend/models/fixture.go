@@ -1,6 +1,6 @@
 package models
 
-//Fixture represents a football match.
+// Fixture represents a football match.
 type Fixture struct {
 	FixtureID         int    `json:"fixtureId"`         // Unique ID of the fixture
 	APIFixtureID      int    `json:"apiFixtureId"`      // Unique ID of the fixture received from the API
