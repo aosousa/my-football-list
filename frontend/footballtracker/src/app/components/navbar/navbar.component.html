@@ -9,23 +9,23 @@
         <ul *ngIf="loginStatus == 'true'" class="navbar-nav nav">
             <li><a routerLink="/contact"><span class="fa fa-envelope-o"></span> Contact</a></li>
         </ul>
-        <ul *ngIf="loginStatus != 'true'" class="navbar-nav navbar-right nav">
-            <li>
+        <ul *ngIf="loginStatus != 'true'" class="navbar-nav ml-auto">
+            <li style="margin-right: 1em;">
                 <a routerLink="/signup"><span class="fa fa-plus-circle"></span> Sign Up</a>
             </li>
         </ul>
-        <ul *ngIf="loginStatus != 'true'" class="navbar-nav navbar-right nav">
-            <li>
+        <ul *ngIf="loginStatus != 'true'" class="navbar-nav">
+            <li style="margin-right: 1em;">
                 <a routerLink="/login"><span class="fa fa-sign-in"></span> Login</a>
             </li>
         </ul>
-        <ul *ngIf="loginStatus == 'true'" class="navbar-nav navbar-right nav">
+        <ul *ngIf="loginStatus == 'true'" class="navbar-nav ml-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="fa fa-user"></span> {{ username }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Profile</a>
+                    <a class="dropdown-item" [routerLink]="['/user', userId]">Profile</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" (click)="logout()"><span class="fa fa-sign-out"></span> Logout</a>
                 </div>

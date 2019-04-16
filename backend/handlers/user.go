@@ -150,6 +150,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.HandleError("User", "UpdateUser", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
 	// get current date time for user's UpdateTime field
@@ -159,6 +160,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.HandleError("User", "UpdateUser", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
 	}
 
 	responseBody = m.HTTPResponse{

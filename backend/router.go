@@ -29,6 +29,7 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/fixtures/last-update", h.GetLastFixtureUpdate).Methods("GET")
 
 	// User and User/Fixture methods
+	router.HandleFunc("/users/current", h.LoggedInUser).Methods("GET")
 	router.HandleFunc("/users/{id}", h.GetUser).Methods("GET")
 	router.HandleFunc("/users/{id}/fixtures", h.GetUserFixtures).Methods("GET")
 	router.HandleFunc("/users/username-existence", h.CheckUsernameExistence).Methods("POST")

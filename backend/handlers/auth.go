@@ -71,7 +71,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if required fields are empty
-	if utils.IsEmpty(user.Username) || utils.IsEmpty(user.Email) || utils.IsEmpty(user.Password) {
+	if utils.IsEmpty(user.Username) || utils.IsEmpty(user.Password) {
 		err := errors.New("Required field is empty")
 		utils.HandleError("Auth", "Signup", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
@@ -120,6 +120,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	session.Values["authenticated"] = true
 	session.Values["userID"] = userID
+	session.Values["username"] = user.Username
 	session.Save(r, w)
 
 	returnUser := m.User{
@@ -179,6 +180,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		loginSuccess, statusCode = true, 200
 		session.Values["authenticated"] = true
 		session.Values["userID"] = compareUser.UserID
+		session.Values["username"] = compareUser.Username
 		session.Save(r, w)
 
 		returnUser = m.User{
@@ -233,6 +235,39 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 		Data:    true,
 		Rows:    0,
+	}
+
+	SetResponse(w, http.StatusOK, responseBody)
+}
+
+func LoggedInUser(w http.ResponseWriter, r *http.Request) {
+	// check user's authentication before proceeding
+	auth, ok := checkAuthStatus(w, r)
+	if !auth || !ok {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
+	var (
+		responseBody m.HTTPResponse
+		user         m.User
+	)
+
+	session, err := store.Get(r, "session-token")
+	if err != nil {
+		utils.HandleError("Auth", "LoggedInUser", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	user = m.User{
+		UserID:   session.Values["userID"].(int),
+		Username: session.Values["username"].(string),
+	}
+
+	responseBody = m.HTTPResponse{
+		Success: true,
+		Data:    user,
 	}
 
 	SetResponse(w, http.StatusOK, responseBody)

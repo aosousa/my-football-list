@@ -22,6 +22,7 @@
 			"@app/*": ["app/*"],
 			"@env/*": ["app/environments/*"],
 			"@components/*": ["app/components/*"],
+			"@helpers/*": ["app/helpers/*"],
 			"@models/*": ["app/models/*"],
 			"@services/*": ["app/services/*"],
 		}

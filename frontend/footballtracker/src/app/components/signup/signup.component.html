@@ -35,6 +35,16 @@
             </div>
         </div>
         <div class="row form-group">
+            <div class="offset-lg-4 col-lg-5">
+                <label for="signup-confirmPassword" class="control-label">Confirm Password</label>
+                <input type="password" id="signup-confirmPassword" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }">
+                <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                    <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+                    <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
             <div class="offset-lg-4 col-lg-1">
                 <button class="btn btn-success" type="submit">Confirm</button>
             </div>

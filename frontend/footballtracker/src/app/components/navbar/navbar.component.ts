@@ -13,6 +13,7 @@ import { FootballService } from '@services/football.service';
 export class NavbarComponent implements OnInit {
     loginStatus: string;
     username: string;
+    userId: number;
 
     constructor(
         private _titleService: Title,
@@ -27,7 +28,8 @@ export class NavbarComponent implements OnInit {
 
         if (loginStatus >= 0) {
             this._footballService.changeMessage('true');
-            this.username = localStorage.getItem('username');
+            this.username = sessionStorage.getItem('username');
+            this.userId = Number(sessionStorage.getItem('userId'));
         } else {
             this._footballService.changeMessage('false');
             this._router.navigate(['/']);
@@ -41,9 +43,10 @@ export class NavbarComponent implements OnInit {
     logout() {
         this._footballService.logout().then(response => {
             if (response.success === true) {
-                localStorage.removeItem('username');
-                this._footballService.changeMessage('false');
+                sessionStorage.removeItem('username');
+                sessionStorage.removeItem('userId');
 
+                this._footballService.changeMessage('false');
                 this._router.navigate(['/']);
             }
         })

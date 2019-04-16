@@ -50,13 +50,12 @@ export class LoginComponent implements OnInit {
             this.submitted = false;
 
             if (response.success) {
-                // TEMPORARY: redirect to /fixtures when that route exists
-                localStorage.setItem('username', this.loginForm.value.username);
-                localStorage.setItem('userId', response.data.userId);
+                sessionStorage.setItem('username', this.loginForm.value.username);
+                sessionStorage.setItem('userId', response.data.userId);
 
                 this._footballService.changeMessage('true');
                 this._footballService.changeUsernameSource(this.loginForm.value.username);
-                this._router.navigate(['/']);
+                this._router.navigate(['/fixtures']);
             }
         }).catch(error => { 
             this._flashMessageService.show('Unsuccessful login. Please try again.', {

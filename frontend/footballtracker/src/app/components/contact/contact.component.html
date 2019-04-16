@@ -1,0 +1,47 @@
+<div class="container">
+    <h1>Contact</h1>
+
+    <p>Found a bug? Have a feature you'd like to see added or something you'd like to see improved? You can send it using the contact form below!</p>
+
+    <form [formGroup]="contactForm" (ngSubmit)="submitContact()">
+        <div class="row form-group">
+            <div class="col-lg-6">
+                <label for="contact-type" class="control-label">Type</label>
+                <select name="contact-type" id="contact-type" class="form-control" formControlName="type" [ngClass]="{ 'is-invalid': submitted && f.type.errors }">
+                    <option value="Bug">Bug</option>
+                    <option value="Suggestion">Suggestion</option>
+                    <option value="Other">Other</option>
+                </select>
+                <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+                    <div *ngIf="f.type.errors.required">Type is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-6">
+                <label for="contact-subject" class="control-label">Subject</label>
+                <input type="text" id="contact-subject" class="form-control" formControlName="subject" [ngClass]="{ 'is-invalid': submitted && f.subject.errors }">
+                <div *ngIf="submitted && f.subject.errors" class="invalid-feedback">
+                    <div *ngIf="f.subject.errors.required">Subject is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-6">
+                <label for="contact-message" class="control-label">Message</label>
+                <textarea id="contact-message" class="form-control" rows="5" formControlName="message" [ngClass]="{ 'is-invalid': submitted && f.message.errors }"></textarea>
+                <div *ngIf="submitted && f.message.errors" class="invalid-feedback">
+                    <div *ngIf="f.message.errors.required">Message is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-1">
+                <button class="btn btn-success" type="submit">Send</button>
+            </div>
+        </div>
+        <div class="row form-group">
+            <flash-messages></flash-messages>
+        </div>
+    </form>
+</div>

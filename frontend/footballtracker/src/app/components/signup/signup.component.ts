@@ -7,6 +7,9 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 // Services
 import { FootballService } from '@services/football.service';
 
+// import custom validator to validate that password and confirm password fields match
+import { MustMatch } from '@helpers/must-match.validator';
+
 @Component({
     selector: 'signup',
     templateUrl: './signup.component.html',
@@ -26,7 +29,10 @@ export class SignupComponent implements OnInit {
         this.registerForm = this._formBuilder.group({
             username: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 \'\-]+$')], this.usernameExistenceValidator.bind(this)],
             email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')], this.emailExistenceValidator.bind(this)],
-            password: ['', [Validators.required, Validators.minLength(6)]]
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            confirmPassword: ['', Validators.required]
+        }, {
+            validator: MustMatch('password', 'confirmPassword')
         });
     }
 
@@ -71,8 +77,8 @@ export class SignupComponent implements OnInit {
         this._footballService.signup(this.registerForm.value).then(response => {
             this.submitted = false;
             if (response.success) {
-                localStorage.setItem('username', this.registerForm.value.username);
-                localStorage.setItem('userId', response.data.userId);
+                sessionStorage.setItem('username', this.registerForm.value.username);
+                sessionStorage.setItem('userId', response.data.userId);
 
                 this._footballService.changeMessage('true');
                 this._footballService.changeUsernameSource(this.registerForm.value.username);
