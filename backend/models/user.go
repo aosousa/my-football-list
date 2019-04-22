@@ -1,24 +1,17 @@
 package models
 
-/*User represents a user in the platform. Fields:
- * UserID (int) - Unique ID of the user in the platform
- * Username (string) - User's username in the platform
- * Password (string) - User's password in the platform
- * Email (string) - User's email (used for account confirmation)
- * CreateTime (string) - Timestamp stating when the account was created
- * UpdateTime (string) - Timestamp stating when the account was last updated
- * Status (int) - Status of the account (0 = Unconfirmed, 1 = Confirmed)
- * SpoilerMode (int) - Whether or not to show results for this user (0 = Show, 1 = Hide)
- */
+// User represents a user in the platform
 type User struct {
-	UserID      int    `json:"userId"`
-	Username    string `json:"username"`
-	Password    string `json:"password"`
-	Email       string `json:"email"`
-	CreateTime  string `json:"createTime"`
-	UpdateTime  string `json:"updateTime"`
-	Status      int    `json:"status"`
-	SpoilerMode int    `json:"spoilerMode"`
+	UserID                     int    `json:"userId"`   // Unique ID of the user in the platform
+	Username                   string `json:"username"` // User's username in the platform
+	Password                   string `json:"password"` // User's password in the platform
+	PasswordResetToken         string // Token to use for password reset
+	PasswordResetTokenValidity string // Validity of a user's password reset token
+	Email                      string `json:"email"`       // User's email (used for password reset)
+	CreateTime                 string `json:"createTime"`  // Timestamp of when the account was created
+	UpdateTime                 string `json:"updateTime"`  // Timestamp of when the account was last updated
+	Status                     int    `json:"status"`      // Status of the account
+	SpoilerMode                bool   `json:"spoilerMode"` // Whether or not to show results for this user (0 = Show, 1 = Hide)
 }
 
 // Users represents a slice of User structs

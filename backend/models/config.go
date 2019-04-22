@@ -8,25 +8,20 @@ import (
 	"github.com/aosousa/my-football-list/utils"
 )
 
-/*Config struct contains all the necessary configurations for the back-end
-to run. Contains:
- * APIKey (string) - Key for the football API
- * RefreshTimer (int) - Frequency (in minutes) of updates to the database
- * DB (DB) - Database configuration
-*/
+//Config struct contains all the necessary configurations for the back-end to run
 type Config struct {
-	APIKey       string `json:"apiKey"`
-	RefreshTimer uint64 `json:"refreshTimer"`
-	DB           DB     `json:"database"`
+	APIKey       string `json:"apiKey"`       // Key for football fixtures API
+	RefreshTimer uint64 `json:"refreshTimer"` // Frequency (in minutes) of updates to the database
+	DB           DB     `json:"database"`     // Database configuration
 }
 
 // DB struct contains the database configuration
 type DB struct {
-	Host     string `json:"host"`
-	Port     string `json:"port"`
-	User     string `json:"user"`
-	Password string `json:"password"`
-	Database string `json:"database"`
+	Host     string `json:"host"`     // Database hostname or IP address
+	Port     string `json:"port"`     // Port in which database is running
+	User     string `json:"user"`     // User used to authenticate in the database
+	Password string `json:"password"` // Password used to authenticate in the database
+	Database string `json:"database"` // Name of database schema used
 }
 
 // CreateConfig adds information from a configuration file to a Config struct.

@@ -1,20 +1,13 @@
 package models
 
-/*League represents a national football league. Fields:
- * LeagueID (int) - Unique ID of the league
- * Name (string) - Name of the league
- * Country (string) - Country of the league
- * Season (int) - Year in which the current season in the league started
- * LogoURL (string) - URL of the logo of the league
- * FlagURL (string) - URL of the flag of the league's country
- */
+// League represents a national football league
 type League struct {
-	LeagueID int    `json:"leagueId"`
-	Name     string `json:"name"`
-	Country  string `json:"country"`
-	Season   int    `json:"season"`
-	LogoURL  string `json:"logoUrl"`
-	FlagURL  string `json:"flagUrl"`
+	LeagueID int    `json:"leagueId"` // Unique ID of the league
+	Name     string `json:"name"`     // Name of the league
+	Country  string `json:"country"`  // Country of the league
+	Season   int    `json:"season"`   // Year in which the current season in the league started
+	LogoURL  string `json:"logoUrl"`  // URL of the logo of the league
+	FlagURL  string `json:"flagUrl"`  // URL of the flag of the league's country
 }
 
 // Leagues represents a slice of League structs

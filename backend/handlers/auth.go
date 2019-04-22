@@ -88,14 +88,14 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	user.Password = hashedPassword
 
-	stmtIns, err := db.Prepare("INSERT INTO tbl_user (username, password, email) VALUES (?, ?, ?)")
+	stmtIns, err := db.Prepare("INSERT INTO tbl_user (username, password, email, spoilerMode) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
-	result, err := stmtIns.Exec(user.Username, user.Password, user.Email)
+	result, err := stmtIns.Exec(user.Username, user.Password, user.Email, user.SpoilerMode)
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)

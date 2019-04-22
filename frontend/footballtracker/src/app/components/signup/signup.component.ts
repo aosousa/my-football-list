@@ -30,7 +30,8 @@ export class SignupComponent implements OnInit {
             username: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 \'\-]+$')], this.usernameExistenceValidator.bind(this)],
             email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')], this.emailExistenceValidator.bind(this)],
             password: ['', [Validators.required, Validators.minLength(6)]],
-            confirmPassword: ['', Validators.required]
+            confirmPassword: ['', Validators.required],
+            spoilerMode: ['']
         }, {
             validator: MustMatch('password', 'confirmPassword')
         });
