@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
 
@@ -271,6 +273,124 @@ func LoggedInUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	SetResponse(w, http.StatusOK, responseBody)
+}
+
+/*IsResetTokenValid checks if the reset password token sent is still valid for use.
+ *
+ * Receives: http.ResponseWriter and http.Request
+ * Request method: GET
+ *
+ * Response
+ * Content-Type: application/json
+ * Body: m.HTTPResponse
+ */
+func IsResetTokenValid(w http.ResponseWriter, r *http.Request) {
+	var (
+		user               m.User
+		responseBody       m.HTTPResponse
+		passwordResetToken string
+		isValid            bool
+	)
+
+	// get token from URL
+	passwordResetToken = mux.Vars(r)["token"]
+
+	// find user with that token
+	err := db.QueryRow("SELECT userId, username, passwordResetToken, passwordResetTokenValidity, email FROM tbl_user WHERE passwordResetToken = '"+passwordResetToken+"'").Scan(&user.UserID, &user.Username, &user.PasswordResetToken, &user.PasswordResetTokenValidity, &user.Email)
+	if err != nil {
+		utils.HandleError("Auth", "IsResetTokenValid", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// check if a valid token already exists
+	isValid = utils.CheckPasswordResetTokenValidity(user.PasswordResetTokenValidity.String)
+
+	responseBody = m.HTTPResponse{
+		Success: true,
+		Data:    isValid,
+	}
+
+	SetResponse(w, http.StatusOK, responseBody)
+}
+
+/*ResetPassword is used to reset a user's password.
+ *
+ * Receives: http.ResponseWriter and http.Request
+ * Request method: POST
+ *
+ * Response
+ * Content-Type: application/json
+ * Body: m.HTTPResponse
+ */
+func ResetPassword(w http.ResponseWriter, r *http.Request) {
+	var (
+		resetPasswordStruct m.ResetPassword
+		responseBody m.HTTPResponse
+		tokenIsValid bool
+	)
+
+	if err := json.NewDecoder(r.Body).Decode(&resetPasswordStruct); err != nil {
+		utils.HandleError("Auth", "ResetPassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// find user with token received
+	user, err := GetUserByToken(resetPasswordStruct.Token)
+	if err != nil {
+		utils.HandleError("Auth", "ResetPassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// check if token received is still valid
+	tokenIsValid = utils.CheckPasswordResetTokenValidity(user.PasswordResetTokenValidity.String)
+
+	if !tokenIsValid {
+		err = errors.New("Reset password token is no longer valid. Create a new reset password request to proceed.")
+
+		responseBody.Error = err.Error()
+		utils.HandleError("Auth", "ResetPassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// hash user's password
+	hashedPassword, err := hashPassword(resetPasswordStruct.Password)
+	if err != nil {
+		utils.HandleError("Auth", "ResetPassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// save new password, and save passwordResetToken and passwordResetTokenValidity as nulls again
+	currentTime := utils.GetCurrentDateTime()
+
+	stmtUpd, err := db.Prepare(`UPDATE tbl_user
+	SET password = ?, passwordResetToken = ?, passwordResetTokenValidity = ?, updateTime = ? WHERE passwordResetToken = ?`)
+	if err != nil {
+		utils.HandleError("Auth", "ResetPassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	_, err = stmtUpd.Exec(hashedPassword, sql.NullString{}, sql.NullString{}, currentTime, resetPasswordStruct.Token)
+	if err != nil {
+		utils.HandleError("Auth", "ResetPassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// TODO: send email confirming password change
+
+	// set response body
+	responseBody = m.HTTPResponse{
+		Success: true,
+	}
+
+	SetResponse(w, http.StatusOK, responseBody)
+	return
 }
 
 /*Gets the ID of the current logged in user.

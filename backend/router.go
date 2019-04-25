@@ -16,6 +16,8 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/signup", h.Signup).Methods("POST")
 	router.HandleFunc("/login", h.Login).Methods("POST")
 	router.HandleFunc("/logout", h.Logout).Methods("POST")
+	router.HandleFunc("/tokens/{token}/valid", h.IsResetTokenValid).Methods("GET")
+	router.HandleFunc("/reset-password", h.ResetPassword).Methods("POST")
 
 	// League methods
 	router.HandleFunc("/leagues", h.GetAllLeagues).Methods("GET")
@@ -40,6 +42,7 @@ func NewRouter() *mux.Router {
 
 	// Contact methods
 	router.HandleFunc("/contact", h.SendEmail).Methods("POST")
+	router.HandleFunc("/reset-password-email", h.SendResetPasswordEmail).Methods("POST")
 
 	return router
 }

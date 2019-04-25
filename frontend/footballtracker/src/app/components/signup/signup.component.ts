@@ -71,7 +71,6 @@ export class SignupComponent implements OnInit {
 
         // stop here if form is invalid
         if (this.registerForm.invalid) {
-            console.log(this.registerForm.get('username').errors);
             return
         }
 

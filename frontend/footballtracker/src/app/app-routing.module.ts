@@ -9,6 +9,7 @@ import { IndexComponent } from '@components/index/index.component';
 import { LoginComponent } from '@components/login/login.component';
 import { PrivacyPolicyComponent } from '@components/privacy-policy/privacy-policy.component';
 import { ProfileComponent } from '@components/profile/profile.component';
+import { ResetPasswordComponent } from '@app/components/reset-password/step1/reset-password.component';
 import { SignupComponent } from '@components/signup/signup.component';
 import { TermsOfServiceComponent } from '@components/terms-of-service/terms-of-service.component';
 
@@ -39,6 +40,10 @@ const routes: Routes = [
     {
         path: 'terms-of-service',
         component: TermsOfServiceComponent
+    },
+    {
+        path: 'reset-password',
+        component: ResetPasswordComponent
     },
     {
         path: 'fixtures',

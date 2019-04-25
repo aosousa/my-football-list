@@ -23,6 +23,7 @@ import { LoginComponent } from '@components/login/login.component';
 import { NavbarComponent } from '@components/navbar/navbar.component';
 import { PrivacyPolicyComponent } from '@components/privacy-policy/privacy-policy.component';
 import { ProfileComponent } from '@components/profile/profile.component';
+import { ResetPasswordComponent } from '@app/components/reset-password/step1/reset-password.component';
 import { SignupComponent } from '@components/signup/signup.component';
 import { TermsOfServiceComponent } from '@app/components/terms-of-service/terms-of-service.component';
 
@@ -49,6 +50,7 @@ export function ConfigLoader(configService: ConfigService) {
 		NavbarComponent,
 		PrivacyPolicyComponent,
 		ProfileComponent,
+		ResetPasswordComponent,
 		SignupComponent,
 		TermsOfServiceComponent
 	],

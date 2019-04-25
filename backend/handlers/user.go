@@ -29,6 +29,46 @@ func GetUserByUsername(username string) (m.User, error) {
 	return u, nil
 }
 
+/*GetUserByEmail queries for a User row in the database through email.
+ * Receives:
+ * email (string) - User's email address
+ *
+ * Returns:
+ * User - User struct
+ * error - Description of error found during execution (or nil otherwise)
+ */
+func GetUserByEmail(email string) (m.User, error) {
+	var u m.User
+
+	err := db.QueryRow("SELECT userId, username, passwordResetToken, passwordResetTokenValidity, email FROM tbl_user WHERE email = ?", email).Scan(&u.UserID, &u.Username, &u.PasswordResetToken, &u.PasswordResetTokenValidity, &u.Email)
+	if err != nil {
+		utils.HandleError("User", "GetUserByEmail", err)
+		return u, err
+	}
+	
+	return u, nil
+}
+
+/*GetUserByToken queries for a User row in the database through password reset token.
+ * Receives:
+ * token (string) - User's password reset token
+ *
+ * Returns:
+ * User - User struct
+ * error - Description of error found during execution (or nil otherwise)
+ */
+func GetUserByToken(token string) (m.User, error) {
+	var u m.User
+
+	err := db.QueryRow("SELECT passwordResetToken, passwordResetTokenValidity FROM tbl_user WHERE passwordResetToken = ?", token).Scan(&u.PasswordResetToken, &u.PasswordResetTokenValidity)
+	if err != nil {
+		utils.HandleError("User", "GetUserByToken", err)
+		return u, err
+	}
+
+	return u, nil
+}
+
 /*Queries for a User row in the database through username.
  * Receives:
  * username (string) - User's username
