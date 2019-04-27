@@ -27,12 +27,16 @@ export class NavbarComponent implements OnInit {
         const loginStatus = this._footballService.isAuthenticated();
 
         if (loginStatus >= 0) {
-            this._footballService.changeMessage('true');
-            this.username = sessionStorage.getItem('username');
-            this.userId = Number(sessionStorage.getItem('userId'));
+            this._footballService.getCurrentUser().then(response => {
+                sessionStorage.setItem('username', response.data.username);
+                sessionStorage.setItem('userId', response.data.userId);
+                    
+                this._footballService.changeMessage('true');
+                this.username = sessionStorage.getItem('username');
+                this.userId = Number(sessionStorage.getItem('userId'));
+            });
         } else {
             this._footballService.changeMessage('false');
-            this._router.navigate(['/']);
         }
     }
 

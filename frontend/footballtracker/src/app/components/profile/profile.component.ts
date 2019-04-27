@@ -13,6 +13,10 @@ import { FootballService } from '@services/football.service';
 })
 export class ProfileComponent implements OnInit {
     user: any = {};
+    userId: number;
+    sessionUserId: number;
+    userExists = true;
+
     constructor(
         private _titleService: Title,
         private _footballService: FootballService,
@@ -23,15 +27,23 @@ export class ProfileComponent implements OnInit {
 
     ngOnInit() {
         this._titleService.setTitle("Football Tracker");
-        const userId = Number(this._route.snapshot.paramMap.get('id'));
+        this.userId = Number(this._route.snapshot.paramMap.get('id'));
+        this.sessionUserId = Number(sessionStorage.getItem('userId'));
 
-        this._footballService.getUser(userId).then(response => {
+        this._footballService.getUser(this.userId).then(response => {
             if (response.success) {
                 this.user = response.data;
                 this._titleService.setTitle("Football Tracker - " + this.user.username);
             } 
         }).catch(error => {
-            // TODO: redirect and show flash message
+            this.userExists = false;
+            this._flashMessageService.show('User does not exist.', {
+                cssClass: 'alert-danger',
+                timeout: 1000000
+            });
         });
+    }
+
+    edit() {
     }
 }

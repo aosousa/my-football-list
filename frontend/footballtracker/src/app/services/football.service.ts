@@ -259,6 +259,43 @@ export class FootballService {
         return document.cookie.indexOf("session-token")
     }
 
+    /**
+     * Get information of the logged in user
+     */
+    getCurrentUser(): Promise<any> {
+        return this._http.get(`${this.config_link}/users/current`, this.options)
+            .pipe(
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    /** 
+     * Checks if a reset password token is still valid
+     * @param {string} token Reset password token
+     * @returns {Promise<any>}
+     */
+    validateResetPasswordToken(token: string) {
+        return this._http.get(`${this.config_link}/tokens/${token}/valid`, this.options)
+            .pipe(
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    /**
+     * Reset a user's password
+     * @param {any} passwordInfo Reset password information
+     * @returns {Promise<any>}
+     */
+    resetPassword(passwordInfo: any) {
+        return this._http.post(`${this.config_link}/reset-password`, passwordInfo, this.options)
+            .pipe(
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
     // Contact methods
 
     /**
@@ -268,6 +305,19 @@ export class FootballService {
      */
     sendEmail(emailInfo: any) {
         return this._http.post(`${this.config_link}/contact`, emailInfo, this.options)
+            .pipe(
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
+    /**
+     * Send a reset password email 
+     * @param {any} emailInfo Email information
+     * @returns {Promise<any>}
+     */
+    sendResetPasswordEmail(emailInfo: any) {
+        return this._http.post(`${this.config_link}/reset-password-email`, emailInfo, this.options)
             .pipe(
                 timeout(5000),
                 map((resp: Response) => resp.json())

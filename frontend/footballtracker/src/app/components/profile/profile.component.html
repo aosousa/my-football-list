@@ -1,12 +1,20 @@
 <div class="container-fluid">
-    <div class="row">
+    <div *ngIf="!userExists" class="row">
+        <div class="offset-lg-5 col-lg-2">
+            <div class="alert alert-danger" role="alert">
+                User does not exist.
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="userExists" class="row">
         <div class="col-lg-3">
             <h1>Profile</h1>
             <p><b>Username: </b>{{ user.username }}</p>
             <p><b>Email: </b>{{ user.email }}</p>
             <p><b>Showing Results: </b>{{ user.spoilerMode == 0 ? 'Yes' : 'No'}}</p>
             <p><b>Joined: </b>{{ user.createTime }}</p>
-            <button class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</button>
+            <button *ngIf="userId == sessionUserId" class="btn btn-primary" [routerLink]="['/user', userId, 'edit']"><i class="fa fa-pencil"></i> Edit</button>
         </div>
         <div class="col-lg-9">
             <h1>Fixtures</h1>

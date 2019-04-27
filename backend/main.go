@@ -27,8 +27,8 @@ func main() {
 	// according to the refresh timer set in the configuration file
 	go func() {
 		// h.SaveTeams("34")
-		// h.UpdateFixtures()
-		// h.StartCronJob()
+		h.UpdateFixtures()
+		h.StartCronJob()
 	}()
 
 	// start HTTP server that will handle all API requests

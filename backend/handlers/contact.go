@@ -47,8 +47,8 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	to := ""
-	err := utils.SendEmail(to, contact.Type, contact.Subject, contact.Message)
+	to := "footballtracker01@gmail.com"
+	err := utils.SendContactEmail(to, contact.Type, contact.Subject, contact.Message)
 	if err != nil {
 		utils.HandleError("Contact", "SendEmail", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
@@ -63,7 +63,7 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-/*SendResetPasswordEmail sends an email address for 
+/*SendResetPasswordEmail sends an email with the link to reset a password
  *
  * Receives: http.ResponseWriter and http.Request
  * Request method: POST
@@ -130,7 +130,13 @@ func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: send email to user
+	// send email to user
+	err = utils.SendResetPasswordEmail(user.Email, userPasswordResetToken)
+	if err != nil {
+		utils.HandleError("Contact", "SendEmail", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
 
 	// set response body
 	responseBody = m.HTTPResponse{

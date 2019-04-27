@@ -88,7 +88,7 @@ export class SignupComponent implements OnInit {
             this._flashMessageService.show('An error occurred while signing up. Please try again later.', {
                 cssClass: 'alert-danger',
                 timeout: 5000
-            })
+            });
         });
     }
 }

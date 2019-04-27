@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
@@ -171,11 +172,35 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var (
 		user         m.User
 		responseBody m.HTTPResponse
+		updateUserID int
 		userID       string
 	)
 
 	// get user ID from URL
 	userID = mux.Vars(r)["id"]
+
+	// get user ID from session and compare to the one in ID - user can only delete his own user fixture rows
+	sessionUserID, err := getUserIDFromSession(r)
+	if err != nil {
+		utils.HandleError("User", "UpdateUser", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	intUserID, err := strconv.Atoi(sessionUserID)
+	if err != nil {
+		utils.HandleError("User", "UpdateUser", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	row := db.QueryRow("SELECT userId FROM tbl_user_fixture WHERE userFixtureID = " + userID)
+	row.Scan(&updateUserID)
+
+	if updateUserID != intUserID {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 
 	stmtUpd, err := db.Prepare(`UPDATE tbl_user
 	SET email = ?, updateTime = ?, spoilerMode = ?

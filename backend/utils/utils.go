@@ -49,14 +49,34 @@ func GenerateRandomToken() string {
 	return fmt.Sprintf("%x", b)
 }
 
-// SendEmail sends an e-mail to the provided e-mail address
-func SendEmail(to, contactType, subject, message string) error {
-	from := ""
-	pass := ""
+// SendContactEmail sends an e-mail to the provided e-mail address from the contact page
+func SendContactEmail(to, contactType, subject, message string) error {
+	from := "footballtracker01@gmail.com"
+	pass := "rryzzunnjwsplwmn"
 	msg := "From: " + from + "\n" +
 		"To: " + to + "\n" +
 		"Subject: " + contactType + " - " + subject + "\n\n" +
 		message
+
+	err := smtp.SendMail("smtp.gmail.com:587",
+	smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
+	from, []string{to}, []byte(msg))
+	return err
+}
+
+// SendResetPasswordEmail sends an e-mail to	 the provided e-mail address with further instructions in order to reset a user's password
+func SendResetPasswordEmail(to string, token string) error {
+	from := "footballtracker01@gmail.com"
+	pass := "rryzzunnjwsplwmn"
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n";
+	msg := "Subject: Football Tracker - Password Reset\n" +
+		mime +
+		"Hello!<br><br>" +
+		"You have requested to reset the password of your Football Tracker account.<br><br>" +
+		"If someone other than you was the one requesting this change, you can ignore this e-mail. Otherwise, click the link below to complete the process. The link below will work for one hour, after that you must request a password reset again.<br><br>" +
+		"<a href=\"http://localhost:4200/password/" + token + "\">Reset Password</a>"
+
+	// TODO: change to final link 
 
 	err := smtp.SendMail("smtp.gmail.com:587",
 	smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
