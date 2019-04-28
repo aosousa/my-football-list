@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 // Components
 import { AboutComponent } from '@components/about/about.component';
 import { ContactComponent } from '@components/contact/contact.component';
+import { EditProfileComponent } from '@components/edit-profile/edit-profile.component';
 import { FixturesComponent } from '@components/fixtures/fixtures.component';
 import { IndexComponent } from '@components/index/index.component';
 import { LoginComponent } from '@components/login/login.component';
@@ -64,6 +65,11 @@ const routes: Routes = [
         path: 'user/:id',
         component: ProfileComponent,
         canActivate: [AuthGuard]
+    },
+    {
+        path: 'user/:id/edit',
+        component: EditProfileComponent,
+        canActivate: [AuthGuard]
     }
 ]
 
@@ -71,7 +77,8 @@ const routes: Routes = [
     imports: [
         RouterModule.forRoot(routes, {
             useHash: false,
-            anchorScrolling: 'enabled'
+            anchorScrolling: 'enabled',
+            onSameUrlNavigation: 'reload'
         })
     ],
     exports: [

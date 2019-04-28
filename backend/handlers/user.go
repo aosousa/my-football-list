@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
@@ -172,7 +171,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var (
 		user         m.User
 		responseBody m.HTTPResponse
-		updateUserID int
 		userID       string
 	)
 
@@ -187,17 +185,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	intUserID, err := strconv.Atoi(sessionUserID)
-	if err != nil {
-		utils.HandleError("User", "UpdateUser", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
-		return
-	}
-
-	row := db.QueryRow("SELECT userId FROM tbl_user_fixture WHERE userFixtureID = " + userID)
-	row.Scan(&updateUserID)
-
-	if updateUserID != intUserID {
+	if userID != sessionUserID {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}

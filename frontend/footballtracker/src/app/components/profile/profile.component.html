@@ -1,4 +1,7 @@
 <div class="container-fluid">
+    <div class="row form-group">
+        <flash-messages></flash-messages>
+    </div>
     <div *ngIf="!userExists" class="row">
         <div class="offset-lg-5 col-lg-2">
             <div class="alert alert-danger" role="alert">
@@ -14,7 +17,8 @@
             <p><b>Email: </b>{{ user.email }}</p>
             <p><b>Showing Results: </b>{{ user.spoilerMode == 0 ? 'Yes' : 'No'}}</p>
             <p><b>Joined: </b>{{ user.createTime }}</p>
-            <button *ngIf="userId == sessionUserId" class="btn btn-primary" [routerLink]="['/user', userId, 'edit']"><i class="fa fa-pencil"></i> Edit</button>
+            <button *ngIf="userId == sessionUserId" class="btn btn-secondary" [routerLink]="['/user', userId, 'edit']"><i class="fa fa-pencil"></i> Edit</button>&nbsp;
+            <button *ngIf="userId == sessionUserId" class="btn btn-info" [routerLink]="['/user', userId, 'change-password']"><i class="fa fa-key"></i> Change Password</button>
         </div>
         <div class="col-lg-9">
             <h1>Fixtures</h1>

@@ -1,0 +1,38 @@
+<div class="container align-middle">
+    <h1 class="text-center">Update Profile: {{ user.username }}</h1>
+
+    <form [formGroup]="editProfileForm" (submit)="edit()">
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-5">
+                <label for="edit-email" class="control-label">E-mail Address</label>
+                <input type="text" id="edit-email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                    <div *ngIf="f.email.errors.required">E-mail address is required</div>
+                    <div *ngIf="f.email.errors.emailExists">An account with that e-mail address already exists</div>
+                    <div *ngIf="f.email.errors.pattern">Invalid e-mail format</div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-5">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" value="1" id="signup-spoilerMode" formControlName="spoilerMode" [ngClass]="{ 'is-invalid': submitted && f.spoilerMode.errors }" [checked]="user.spoilerMode">
+                    <label style="font-weight: normal" for="signup-spoilerMode" class="form-check-label">Hide Results</label>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-1">
+                <button class="btn btn-success" type="submit">Confirm</button>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-primary" [routerLink]="['/user', userId]">Cancel</button>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="offset-lg-4 col-lg-5" style="padding: 0 !important;">
+                <flash-messages></flash-messages>
+            </div>
+        </div>
+    </form>
+</div>

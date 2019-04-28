@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FlashMessagesService } from 'angular2-flash-messages';
 
@@ -22,7 +22,6 @@ export class ProfileComponent implements OnInit {
         private _footballService: FootballService,
         private _flashMessageService: FlashMessagesService,
         private _route: ActivatedRoute,
-        private _router: Router
     ) { }
 
     ngOnInit() {
@@ -42,8 +41,5 @@ export class ProfileComponent implements OnInit {
                 timeout: 1000000
             });
         });
-    }
-
-    edit() {
     }
 }

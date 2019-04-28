@@ -16,6 +16,7 @@ import { CallbackPipe } from '@app/callback.pipe';
 import { AboutComponent } from '@components/about/about.component';
 import { AppComponent } from './app.component';
 import { ContactComponent } from '@components/contact/contact.component';
+import { EditProfileComponent } from '@components/edit-profile/edit-profile.component';
 import { FixturesComponent } from '@components/fixtures/fixtures.component';
 import { FooterComponent } from '@components/footer/footer.component';
 import { IndexComponent } from '@components/index/index.component';
@@ -44,6 +45,7 @@ export function ConfigLoader(configService: ConfigService) {
 		AppComponent,
 		CallbackPipe,
 		ContactComponent,
+		EditProfileComponent,
 		FixturesComponent,
 		FooterComponent,
 		IndexComponent,
