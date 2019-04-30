@@ -177,7 +177,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// get user ID from URL
 	userID = mux.Vars(r)["id"]
 
-	// get user ID from session and compare to the one in ID - user can only delete his own user fixture rows
+	// get user ID from session and compare to the one in URL - user can only update himself
 	sessionUserID, err := getUserIDFromSession(r)
 	if err != nil {
 		utils.HandleError("User", "UpdateUser", err)

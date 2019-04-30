@@ -38,6 +38,7 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/users/email-existence", h.CheckEmailExistence).Methods("POST")
 	router.HandleFunc("/users/fixtures", h.CreateUserFixture).Methods("POST")
 	router.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT")
+	router.HandleFunc("/users/{id}/change-password", h.ChangePassword).Methods("PUT")
 	router.HandleFunc("/user-fixtures/{id}", h.DeleteUserFixture).Methods("DELETE")
 
 	// Contact methods

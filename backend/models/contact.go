@@ -12,4 +12,5 @@ type ResetPassword struct {
 	Token string `json:"token"` // Password reset token previously sent to recipient's email address
 	Email string `json:"email"` // Recipient email address
 	Password string `json:"password"` // User's new password
+	ConfirmPassword string `json:"confirmPassword"` // User's new password confirmation
 }

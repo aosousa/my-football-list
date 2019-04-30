@@ -73,8 +73,16 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if required fields are empty
-	if utils.IsEmpty(user.Username) || utils.IsEmpty(user.Password) {
+	if utils.IsEmpty(user.Username) || utils.IsEmpty(user.Password) || utils.IsEmpty(user.ConfirmPassword) {
 		err := errors.New("Required field is empty")
+		utils.HandleError("Auth", "Signup", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// check if password validations fail
+	if len(user.Password) < 6 || user.Password != user.ConfirmPassword {
+		err := errors.New("Password validations failed")
 		utils.HandleError("Auth", "Signup", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
@@ -242,6 +250,15 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	SetResponse(w, http.StatusOK, responseBody)
 }
 
+/*LoggedInUser is used to get information of the session's user
+ *
+ * Receives: http.ResponseWriter and http.Request
+ * Request method: GET
+ *
+ * Response
+ * Content-Type: application/json
+ * Body: m.HTTPResponse
+ */
 func LoggedInUser(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication before proceeding
 	auth, ok := checkAuthStatus(w, r)
@@ -356,6 +373,14 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check if password validations fail
+	if len(resetPasswordStruct.Password) < 6 || resetPasswordStruct.Password != resetPasswordStruct.ConfirmPassword {
+		err = errors.New("Password validations failed")
+		utils.HandleError("Auth", "ResetPassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
 	// hash user's password
 	hashedPassword, err := hashPassword(resetPasswordStruct.Password)
 	if err != nil {
@@ -391,6 +416,108 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	SetResponse(w, http.StatusOK, responseBody)
 	return
+}
+
+/*ChangePassword is used to change a user's password.
+ *
+ * Receives: http.ResponseWriter and http.Request
+ * Request method: PUT
+ *
+ * Response
+ * Content-Type: application/json
+ * Body: m.HTTPResponse
+ */
+func ChangePassword(w http.ResponseWriter, r *http.Request) {
+	// check user's authentication status before proceeding
+	auth, ok := checkAuthStatus(w, r)
+	if !auth || !ok {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
+	var (
+		user m.User
+		changePasswordStruct m.ChangePasswordRequest
+		responseBody m.HTTPResponse
+		userID string
+	)
+
+	// get user ID from URL
+	userID = mux.Vars(r)["id"]
+
+	// get user ID from session and compare to the one in URL - user can only change his own password
+	sessionUserID, err := getUserIDFromSession(r)
+	if err != nil {
+		utils.HandleError("Auth", "ChangePassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	if userID != sessionUserID {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	// fetch request body
+	if err := json.NewDecoder(r.Body).Decode(&changePasswordStruct); err != nil {
+		utils.HandleError("Auth", "ChangePassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// check if user got the current password right
+	err = db.QueryRow("SELECT password FROM tbl_user WHERE userId = " + userID).Scan(&user.Password)
+	if err != nil {
+		utils.HandleError("Auth", "ChangePassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	passwordMatches := checkPasswordHash(changePasswordStruct.CurrentPassword, user.Password)
+	if (!passwordMatches) {
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// check new password length and if new passwords match
+	if len(changePasswordStruct.NewPassword) < 6 || changePasswordStruct.NewPassword != changePasswordStruct.ConfirmNewPassword {
+		utils.HandleError("Auth", "ChangePassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// update user password
+	hashedPassword, err := hashPassword(changePasswordStruct.NewPassword)
+	if err != nil {
+		utils.HandleError("Auth", "ChangePassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	currentTime := utils.GetCurrentDateTime()
+
+	stmtUpd, err := db.Prepare(`UPDATE tbl_user
+	SET password = ?, updateTime = ?
+	WHERE userId = ?`)
+	if err != nil {
+		utils.HandleError("Auth", "ChangePassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	_, err = stmtUpd.Exec(hashedPassword, currentTime, userID)
+	if err != nil {
+		utils.HandleError("Auth", "ChangePassword", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// set response body
+	responseBody = m.HTTPResponse{
+		Success: true,
+	}
+
+	SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*Gets the ID of the current logged in user.
