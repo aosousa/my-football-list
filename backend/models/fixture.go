@@ -13,7 +13,8 @@ type Fixture struct {
 	AwayTeamGoals     int    `json:"awayTeamGoals"`     // Number of goals scored by the away team
 	Status            string `json:"status"`            // Status of the fixture (not started, ongoing, finished, etc.)
 	Elapsed           int    `json:"elapsed"`           // Number of minutes played in the fixture
-	UserFixtureStatus int    `json:"userFixtureStatus"` // User's relationship with the fixture (1 = Watching, 2 = Watched, 3 = Interested in Watching)
+	UserFixtureStatus int    `json:"userFixtureStatus"` // User's relationship with the fixture (1 = Watched, 2 = Want to Watch)
+	UserFixtureID int `json:"userFixtureID"` // User fixture ID
 }
 
 // Fixtures represents a slice of Fixture structs

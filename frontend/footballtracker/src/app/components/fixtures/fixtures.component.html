@@ -2,4 +2,33 @@
     <h1 class="text-center">Fixtures</h1>
     <p>Fixtures are every updated every 30 minutes.</p>
     <p>Last update: {{ lastFixtureUpdate }}</p>
+
+    <div *ngFor="let league of groupedFixtures">
+        <span *ngIf="league.fixtures[0].league.logoUrl"><h3><img class="league-flag" src="{{ league.fixtures[0].league.logoUrl }}"> {{ league.fixtures[0].round }} </h3></span>
+        <span *ngIf="!league.fixtures[0].league.logoUrl"><h3><img class="league-flag" src="{{ league.fixtures[0].league.flagUrl }}"> {{ league.fixtures[0].round }} </h3></span>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Time</th>
+                    <th scope="col" colspan="4">Fixture</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let fixture of league.fixtures">
+                    <td>{{ fixture.date | slice:11:20 }}</td>
+                    <td style="width: 30%;"><img src="{{ fixture.homeTeam.logoUrl }}" class="team-flag"> {{ fixture.homeTeam.name }}</td>
+                    <td *ngIf="fixture.status == 'NS' || user.spoilerMode">vs</td>
+                    <td *ngIf="fixture.status != 'NS' && !user.spoilerMode" class="score">{{ fixture.homeTeamGoals }} - {{ fixture.awayTeamGoals }}</td>
+                    <td style="width: 30%;"><img src="{{ fixture.awayTeam.logoUrl }}" class="team-flag"> {{ fixture.awayTeam.name }}</td>
+                    <td *ngIf="!user.spoilerMode">{{ fixture.status == 'FT' ? 'FT' : fixture.elapsed + "'" }}</td>
+                    <td>
+                        <span *ngIf="fixture.status == 'FT'" [ngClass]="{'selected-option': fixture.userFixtureStatus == 1 }" (click)="setUserFixtureStatus(fixture.fixtureId, 1, fixture.userFixtureID)"><i class="fa fa-check-circle-o action-icon" title="Watched"></i></span>
+                        <span [ngClass]="{'selected-option': fixture.userFixtureStatus == 2 }" (click)="setUserFixtureStatus(fixture.fixtureId, 2, fixture.userFixtureID)"><i class="fa fa-thumbs-up action-icon" title="Want to Watch"></i></span>
+                        <span *ngIf="fixture.userFixtureID != 0" (click)="deleteUserFixture(fixture.userFixtureID)"><i class="fa fa-times-circle-o action-icon" title="Delete Status"></i></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

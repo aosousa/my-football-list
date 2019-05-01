@@ -147,7 +147,7 @@ func GetDateFixtures(w http.ResponseWriter, r *http.Request) {
 	tbl_league.name, tbl_league.country, tbl_league.season,
 	tbl_league.logoUrl, flagUrl, round, homeTeam, homeTeam.name, homeTeam.logoUrl,
 	homeTeamGoals, awayTeam, awayTeam.name, awayTeam.logoUrl,
-	awayTeamGoals, tbl_fixture.status, elapsed, tbl_user_fixture.status
+	awayTeamGoals, tbl_fixture.status, elapsed, tbl_user_fixture.status, userFixtureId
 	FROM tbl_fixture
 	INNER JOIN tbl_league ON tbl_fixture.league = tbl_league.leagueId
 	INNER JOIN tbl_team AS homeTeam ON tbl_fixture.homeTeam = homeTeam.teamId
@@ -165,12 +165,12 @@ func GetDateFixtures(w http.ResponseWriter, r *http.Request) {
 		var (
 			league                                                                               m.League
 			homeTeam, awayTeam                                                                   m.Team
-			fixtureID, apiFixtureID, homeTeamGoals, awayTeamGoals, elapsed, userFixtureStatusInt int
+			fixtureID, apiFixtureID, homeTeamGoals, awayTeamGoals, elapsed, userFixtureStatusInt, userFixtureIDInt int
 			date, round, status                                                                  string
-			userFixtureStatus                                                                    sql.NullInt64
+			userFixtureStatus, userFixtureID                                                                    sql.NullInt64
 		)
 
-		err = rows.Scan(&fixtureID, &apiFixtureID, &date, &league.LeagueID, &league.Name, &league.Country, &league.Season, &league.LogoURL, &league.FlagURL, &round, &homeTeam.TeamID, &homeTeam.Name, &homeTeam.LogoURL, &homeTeamGoals, &awayTeam.TeamID, &awayTeam.Name, &awayTeam.LogoURL, &awayTeamGoals, &status, &elapsed, &userFixtureStatus)
+		err = rows.Scan(&fixtureID, &apiFixtureID, &date, &league.LeagueID, &league.Name, &league.Country, &league.Season, &league.LogoURL, &league.FlagURL, &round, &homeTeam.TeamID, &homeTeam.Name, &homeTeam.LogoURL, &homeTeamGoals, &awayTeam.TeamID, &awayTeam.Name, &awayTeam.LogoURL, &awayTeamGoals, &status, &elapsed, &userFixtureStatus, &userFixtureID)
 		if err != nil {
 			utils.HandleError("Fixture", "GetTeamFixtures", err)
 			SetResponse(w, http.StatusInternalServerError, responseBody)
@@ -179,6 +179,10 @@ func GetDateFixtures(w http.ResponseWriter, r *http.Request) {
 
 		if userFixtureStatus.Valid {
 			userFixtureStatusInt = int(userFixtureStatus.Int64)
+		}
+
+		if userFixtureID.Valid {
+			userFixtureIDInt = int(userFixtureID.Int64)
 		}
 
 		fixture = m.Fixture{
@@ -194,6 +198,7 @@ func GetDateFixtures(w http.ResponseWriter, r *http.Request) {
 			Status:            status,
 			Elapsed:           elapsed,
 			UserFixtureStatus: userFixtureStatusInt,
+			UserFixtureID: userFixtureIDInt,
 		}
 
 		fixtures = append(fixtures, fixture)
