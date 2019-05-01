@@ -113,7 +113,7 @@ func UpdateFixtures() {
 	}
 	defer stmtIns.Close()
 
-	stmtUpd, err := db.Prepare("UPDATE tbl_fixture SET homeTeamGoals = ?, awayTeamGoals = ?,status = ?, elapsed = ? WHERE apiFixtureId = ?")
+	stmtUpd, err := db.Prepare("UPDATE tbl_fixture SET date = ?, homeTeamGoals = ?, awayTeamGoals = ?, status = ?, elapsed = ? WHERE apiFixtureId = ?")
 	if err != nil {
 		utils.HandleError("Fixture", "UpdateFixtures", err)
 	}
@@ -157,7 +157,7 @@ func UpdateFixtures() {
 
 			// execute update statement if fixture already exists, insert statement otherwise
 			if fixtureExists {
-				_, err = stmtUpd.Exec(homeTeamGoals, awayTeamGoals, status, elapsed, apiFixtureID)
+				_, err = stmtUpd.Exec(date, homeTeamGoals, awayTeamGoals, status, elapsed, apiFixtureID)
 				if err != nil {
 					utils.HandleError("Fixture", "UpdateFixtures", err)
 				}
@@ -170,7 +170,6 @@ func UpdateFixtures() {
 		}
 	}
 
-	// TODO: change this to use the logging service
 	if err == nil {
 		fmt.Printf("[%s] Fixtures updated successfully.\n", lastFixtureUpdate)
 	}
