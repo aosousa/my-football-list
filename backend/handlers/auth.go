@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -444,6 +445,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	// get user ID from URL
 	userID = mux.Vars(r)["id"]
+	fmt.Println(userID)
 
 	// get user ID from session and compare to the one in URL - user can only change his own password
 	sessionUserID, err := getUserIDFromSession(r)
@@ -475,12 +477,18 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	passwordMatches := checkPasswordHash(changePasswordStruct.CurrentPassword, user.Password)
 	if (!passwordMatches) {
+		err = errors.New("Current password is wrong.")
+		responseBody.Error = err.Error()
+
 		SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	// check new password length and if new passwords match
 	if len(changePasswordStruct.NewPassword) < 6 || changePasswordStruct.NewPassword != changePasswordStruct.ConfirmNewPassword {
+		err = errors.New("Error in new passwored length or new password fields do not match.")
+		responseBody.Error = err.Error()
+
 		utils.HandleError("Auth", "ChangePassword", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
 		return

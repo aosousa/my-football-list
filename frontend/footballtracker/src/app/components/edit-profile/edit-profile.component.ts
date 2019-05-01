@@ -18,6 +18,7 @@ export class EditProfileComponent implements OnInit {
     sessionUserId: number;
     editProfileForm: FormGroup;
     submitted = false;
+    canEdit = true;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -39,6 +40,7 @@ export class EditProfileComponent implements OnInit {
         this.sessionUserId = Number(sessionStorage.getItem('userId'));
 
         if (this.userId != this.sessionUserId) {
+            this.canEdit = false;
             this._flashMessageService.show('You are not authorized to perform this action.', {
                 cssClass: 'alert-danger',
                 timeout: 1000000

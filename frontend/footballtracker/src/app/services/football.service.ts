@@ -296,6 +296,19 @@ export class FootballService {
             ).toPromise();
     }
 
+    /**
+     * Change a user's password
+     * @param {number} userId Id of the user that is changing password
+     * @param {any} passwordInfo Information required to perform a password change
+     */
+    changePassword(userId: number, passwordInfo: any) {
+        return this._http.put(`${this.config_link}/users/${userId}/change-password`, passwordInfo, this.options)
+            .pipe(
+                timeout(5000),
+                map((resp: Response) => resp.json())
+            ).toPromise();
+    }
+
     // Contact methods
 
     /**

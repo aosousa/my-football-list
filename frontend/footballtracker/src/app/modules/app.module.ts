@@ -15,6 +15,7 @@ import { CallbackPipe } from '@app/callback.pipe';
 // Components
 import { AboutComponent } from '@components/about/about.component';
 import { AppComponent } from './app.component';
+import { ChangePasswordComponent } from '@components/change-password/change-password.component';
 import { ContactComponent } from '@components/contact/contact.component';
 import { EditProfileComponent } from '@components/edit-profile/edit-profile.component';
 import { FixturesComponent } from '@components/fixtures/fixtures.component';
@@ -44,6 +45,7 @@ export function ConfigLoader(configService: ConfigService) {
 		AboutComponent,
 		AppComponent,
 		CallbackPipe,
+		ChangePasswordComponent,
 		ContactComponent,
 		EditProfileComponent,
 		FixturesComponent,
