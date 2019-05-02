@@ -1,0 +1,32 @@
+.container {
+    padding-top: 20px;
+}
+
+.row {
+    padding-top: 10px;
+}
+
+.league-flag {
+    width: 35px;
+}
+
+.team-flag {
+    width: 25px;
+}
+
+.header-flag {
+    margin-top: -10px;
+    width: 50px;
+}
+
+.action-icon {
+    font-size: 1.5em;
+}
+
+.selected-option {
+    color: #00ff2d;
+}
+
+#teamName {
+    margin-left: 10px;
+}

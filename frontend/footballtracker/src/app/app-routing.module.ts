@@ -14,6 +14,7 @@ import { ProfileComponent } from '@components/profile/profile.component';
 import { ResetPasswordComponent } from '@components/reset-password/step1/reset-password.component';
 import { NewPasswordComponent } from '@components/reset-password/step2/new-password.component';
 import { SignupComponent } from '@components/signup/signup.component';
+import { TeamComponent } from '@components/team/team.component';
 import { TermsOfServiceComponent } from '@components/terms-of-service/terms-of-service.component';
 
 // Services
@@ -75,6 +76,11 @@ const routes: Routes = [
     {
         path: 'user/:id/change-password',
         component: ChangePasswordComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'team/:id',
+        component: TeamComponent,
         canActivate: [AuthGuard]
     }
 ]

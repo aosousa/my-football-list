@@ -40,3 +40,8 @@ th:nth-of-type(3) {
 .selected-option {
     color: #00ff2d;
 }
+
+.team {
+    cursor: pointer;
+    width: 30%;
+}

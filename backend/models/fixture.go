@@ -19,3 +19,9 @@ type Fixture struct {
 
 // Fixtures represents a slice of Fixture structs
 type Fixtures []Fixture
+
+// TeamFixtures is the struct used in the API endpoint that returns a team's fixtures
+type TeamFixtures struct {
+	Fixtures []Fixture `json:"fixtures"` // Slice of Fixture struct
+	Team Team `json:"team"` // Information of the team
+}

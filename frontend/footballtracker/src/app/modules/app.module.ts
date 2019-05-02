@@ -28,6 +28,7 @@ import { ProfileComponent } from '@components/profile/profile.component';
 import { ResetPasswordComponent } from '@components/reset-password/step1/reset-password.component';
 import { NewPasswordComponent } from '@components/reset-password/step2/new-password.component';
 import { SignupComponent } from '@components/signup/signup.component';
+import { TeamComponent } from '@components/team/team.component';
 import { TermsOfServiceComponent } from '@app/components/terms-of-service/terms-of-service.component';
 
 // Services
@@ -58,6 +59,7 @@ export function ConfigLoader(configService: ConfigService) {
 		ResetPasswordComponent,
 		NewPasswordComponent,
 		SignupComponent,
+		TeamComponent,
 		TermsOfServiceComponent
 	],
 	imports: [
