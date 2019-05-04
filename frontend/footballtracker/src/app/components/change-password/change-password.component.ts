@@ -23,6 +23,7 @@ export class ChangePasswordComponent implements OnInit {
     submitted = false;
     changedSuccessfully = false;
     canEdit = true;
+    processing = false;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -62,15 +63,18 @@ export class ChangePasswordComponent implements OnInit {
 
     changePassword() {
         this.submitted = true;
+        this.processing = true;
 
         // stop here if form is invalid
         if (this.changePasswordForm.invalid) {
+            this.processing = false;
             return
         }
 
         if (!this.changedSuccessfully) {
             this._footballService.changePassword(this.userId, this.changePasswordForm.value).then(response => {
                 this.submitted = false;
+                this.processing = false;
                 if (response.success) {
                     this._flashMessageService.show('Your password was changed successfully. Redirecting you to your profile page in 5 seconds.', {
                         cssClass: 'alert-success',
@@ -81,6 +85,7 @@ export class ChangePasswordComponent implements OnInit {
                     }, 5000);
                 }
             }).catch((error: Response) => {
+                this.processing = false;
                 this._flashMessageService.show(error.json().error, {
                     cssClass: 'alert-danger',
                     timeout: 10000

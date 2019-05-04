@@ -18,6 +18,7 @@ import { MustMatch } from '@helpers/must-match.validator';
 export class SignupComponent implements OnInit {
     registerForm: FormGroup;
     submitted = false;
+    processing = false;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -68,23 +69,31 @@ export class SignupComponent implements OnInit {
 
     signup() {
         this.submitted = true;
+        this.processing = true;
 
         // stop here if form is invalid
         if (this.registerForm.invalid) {
+            this.processing = false;
             return
+        }
+
+        if (this.registerForm.value.spoilerMode == "") {
+            this.registerForm.value.spoilerMode = false;
         }
 
         this._footballService.signup(this.registerForm.value).then(response => {
             this.submitted = false;
+            this.processing = false;
             if (response.success) {
-                sessionStorage.setItem('username', this.registerForm.value.username);
+                sessionStorage.setItem('username', response.data.username);
                 sessionStorage.setItem('userId', response.data.userId);
 
                 this._footballService.changeMessage('true');
-                this._footballService.changeUsernameSource(this.registerForm.value.username);
+                this._footballService.changeUsernameSource(response.data.username);
                 this._router.navigate(['/fixtures']);
             }
         }).catch(error => {
+            this.processing = false;
             this._flashMessageService.show('An error occurred while signing up. Please try again later.', {
                 cssClass: 'alert-danger',
                 timeout: 5000

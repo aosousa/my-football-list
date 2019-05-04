@@ -72,6 +72,8 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
+	
+	fmt.Println(user)
 
 	// check if required fields are empty
 	if utils.IsEmpty(user.Username) || utils.IsEmpty(user.Password) || utils.IsEmpty(user.ConfirmPassword) {
@@ -130,7 +132,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	session.Values["authenticated"] = true
-	session.Values["userID"] = userID
+	session.Values["userID"] = int(userID)
 	session.Values["username"] = user.Username
 	session.Save(r, w)
 

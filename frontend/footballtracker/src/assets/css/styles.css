@@ -218,3 +218,33 @@ a.active,
 #flashMessages .flash-message:last-child {
     display: block;
 }
+
+/** FIXTURES **/
+
+.league-flag {
+    width: 35px;
+}
+
+.team-flag {
+    width: 25px;
+}
+
+.score {
+    font-weight: bold;
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: center;
+}
+
+.action-icon {
+    font-size: 1.5em;
+}
+
+.selected-option {
+    color: #00ff2d;
+}
+
+.team {
+    cursor: pointer;
+    width: 30%;
+}

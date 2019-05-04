@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FlashMessagesService } from 'angular2-flash-messages';
@@ -17,9 +17,10 @@ import { FootballService } from '@services/football.service';
 })
 export class TeamComponent implements OnInit {
     user: any = {};
-    teamFixtures: any;
+    teamFixtures: any = {};
     sessionUserId: number;
     teamId: number;
+    dataTable: any;
 
     constructor(
         private _titleService: Title,
@@ -31,8 +32,12 @@ export class TeamComponent implements OnInit {
     ngOnInit() {
         this.sessionUserId = Number(sessionStorage.getItem('userId'));
         this.teamId = Number(this._route.snapshot.paramMap.get('id'));
-
         this.loadTeamFixtures(this.teamId);
+        this._footballService.getUser(this.sessionUserId).then(response => {
+            if (response.success) {
+                this.user = response.data;
+            }
+        });
     }
 
     /**

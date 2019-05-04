@@ -15,6 +15,7 @@ import { FootballService } from '@services/football.service';
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     submitted = false;
+    processing = false;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -40,14 +41,17 @@ export class LoginComponent implements OnInit {
 
     login() {
         this.submitted = true;
+        this.processing = true;
 
         // stop here if form is invalid
         if (this.loginForm.invalid) {
+            this.processing = false;
             return
         }
 
         this._footballService.login(this.loginForm.value).then(response => {
             this.submitted = false;
+            this.processing = false;
 
             if (response.success) {
                 sessionStorage.setItem('username', this.loginForm.value.username);
@@ -58,6 +62,7 @@ export class LoginComponent implements OnInit {
                 this._router.navigate(['/fixtures']);
             }
         }).catch(error => { 
+            this.processing = false;
             this._flashMessageService.show('Unsuccessful login. Please try again.', {
                 cssClass: 'alert-danger',
                 timeout: 5000

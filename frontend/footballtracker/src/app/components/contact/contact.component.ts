@@ -14,6 +14,7 @@ import { FootballService } from '@services/football.service';
 export class ContactComponent implements OnInit {
     contactForm: FormGroup;
     submitted = false;
+    processing = false;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -39,14 +40,17 @@ export class ContactComponent implements OnInit {
 
     submitContact() {
         this.submitted = true;
+        this.processing = true;
 
         // stop here if form is invalid
         if (this.contactForm.invalid) {
+            this.processing = false;
             return
         }
 
         this._footballService.sendEmail(this.contactForm.value).then(response => {
             this.submitted = false;
+            this.processing = false;
 
             if (response.success) {
                 this.contactForm.reset();
@@ -56,6 +60,7 @@ export class ContactComponent implements OnInit {
                 });
             }
         }).catch(error => {
+            this.processing = false;
             this._flashMessagesService.show('An error occurred while trying to submit the contact form. Please try again later.', {
                 cssClass: 'alert-danger',
                 timeout: 5000

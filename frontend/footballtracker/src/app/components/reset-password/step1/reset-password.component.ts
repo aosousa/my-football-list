@@ -14,6 +14,7 @@ import { FootballService } from '@services/football.service';
 export class ResetPasswordComponent implements OnInit {
     resetPasswordForm: FormGroup;
     submitted = false;
+    processing = false;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -37,13 +38,16 @@ export class ResetPasswordComponent implements OnInit {
 
     sendResetPasswordEmail() {
         this.submitted = true;
+        this.processing = true;
 
         // stop here if the form is invalid
         if (this.resetPasswordForm.invalid) {
+            this.processing = false;
             return
         }
 
         this._footballService.checkEmailExistence(this.resetPasswordForm.value).then(response => {
+            this.processing = false;
             // account with email exists - send email
             if (response.rows === 1) {
                 this._footballService.sendResetPasswordEmail(this.resetPasswordForm.value).then(response => {
@@ -64,6 +68,7 @@ export class ResetPasswordComponent implements OnInit {
             } else {
                 // account doesn't exist - show error message
                 this.submitted = false;
+                this.processing = false;
                 this._flashMessageService.show('There is no account registered under that e-mail address in the platform.', {
                     cssClass: 'alert-danger',
                     timeout: 1000000

@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
         const loginStatus = this._footballService.isAuthenticated();
         if (loginStatus >= 0) {
             this._footballService.changeMessage('true');
-            return true
+            return true;
         } else {
             this._footballService.changeMessage('false');
             this._router.navigate(['/']);

@@ -21,6 +21,7 @@ export class NewPasswordComponent implements OnInit {
     invalidToken = true;
     changedSuccessfully = false;
     token: string;
+    processing = false;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -61,9 +62,11 @@ export class NewPasswordComponent implements OnInit {
 
     resetPassword() {
         this.submitted = true;
+        this.processing = true;
 
         // stop here if form is invalid
         if (this.newPasswordForm.invalid) {
+            this.processing = false;
             return
         }
 
@@ -72,6 +75,7 @@ export class NewPasswordComponent implements OnInit {
             passwordResetInfo.token = this.token
     
             this._footballService.resetPassword(passwordResetInfo).then(response => {
+                this.processing = false;
                 if (response.success) {
                     this.submitted = false;
                     this.invalidToken = false;
@@ -86,6 +90,7 @@ export class NewPasswordComponent implements OnInit {
                 }
             }).catch(error => {
                 this.invalidToken = true;
+                this.processing = false;
                 this._flashMessageService.show('Reset password token is no longer valid. You must request a new password reset in order to change your password.', {
                     cssClass: 'alert-danger',
                     timeout: 1000000

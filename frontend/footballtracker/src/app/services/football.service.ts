@@ -253,7 +253,7 @@ export class FootballService {
 
     /**
      * Check if the user is authenticated in the platform
-     * @returns {number}
+     * @returns {boolean}
      */
     isAuthenticated(): number {
         return document.cookie.indexOf("session-token")

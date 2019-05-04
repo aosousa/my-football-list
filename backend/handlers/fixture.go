@@ -78,7 +78,7 @@ func GetTeamFixtures(w http.ResponseWriter, r *http.Request) {
 	LEFT JOIN tbl_user_fixture ON tbl_user_fixture.fixtureId = tbl_fixture.fixtureId
 	WHERE homeTeam = ` + teamID + ` OR awayTeam = ` + teamID + ` 
 	AND (userId = ` + userID + ` OR userId IS NULL)
-	ORDER BY apiFixtureId DESC`)
+	ORDER BY date DESC`)
 	if err != nil {
 		utils.HandleError("Fixture", "GetTeamFixtures", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)

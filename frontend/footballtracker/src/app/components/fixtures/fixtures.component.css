@@ -6,24 +6,6 @@
     padding-top: 10px;
 }
 
-.league-flag {
-    width: 35px;
-}
-
-.team-flag {
-    width: 25px;
-}
-
-.score {
-    font-weight: bold;
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-.action-icon {
-    font-size: 1.5em;
-}
-
 td > span:not(:first-child) {
     margin-left: 10px;
 }
@@ -37,11 +19,6 @@ th:nth-of-type(3) {
     width: 10%;
 }
 
-.selected-option {
-    color: #00ff2d;
-}
-
-.team {
-    cursor: pointer;
-    width: 30%;
+.action-icon {
+    font-size: 1.5em;
 }

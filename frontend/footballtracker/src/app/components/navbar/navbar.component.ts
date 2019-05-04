@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
     loginStatus: string;
     username: string;
     userId: number;
+    isLoggedIn: boolean;
 
     constructor(
         private _titleService: Title,
@@ -24,9 +25,9 @@ export class NavbarComponent implements OnInit {
     ngOnInit() {
         this._footballService.currentMessage.subscribe(message => this.loginStatus = message);
         this._footballService.usernameMessage.subscribe(message => this.username = message);
-        const loginStatus = this._footballService.isAuthenticated();
+        this.isLoggedIn = !this._footballService.isAuthenticated();
 
-        if (loginStatus >= 0) {
+        if (this.isLoggedIn) {
             this._footballService.getCurrentUser().then(response => {
                 sessionStorage.setItem('username', response.data.username);
                 sessionStorage.setItem('userId', response.data.userId);
@@ -46,10 +47,11 @@ export class NavbarComponent implements OnInit {
 
     logout() {
         this._footballService.logout().then(response => {
-            if (response.success === true) {
+            if (response.success) {
                 sessionStorage.removeItem('username');
                 sessionStorage.removeItem('userId');
 
+                this.isLoggedIn = false;
                 this._footballService.changeMessage('false');
                 this._router.navigate(['/']);
             }

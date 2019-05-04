@@ -19,6 +19,7 @@ export class EditProfileComponent implements OnInit {
     editProfileForm: FormGroup;
     submitted = false;
     canEdit = true;
+    processing = false;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -79,14 +80,17 @@ export class EditProfileComponent implements OnInit {
     
     edit() {
         this.submitted = true;
+        this.processing = true;
 
         // stop here if form is invalid
         if (this.editProfileForm.invalid) {
+            this.processing = false;
             return
         }
 
         this._footballService.updateUser(this.userId, this.editProfileForm.value).then(response => {
             this.submitted = false;
+            this.processing = false;
             if (response.success) {
                 this._flashMessageService.show('Your profile was updated successfully. Redirecting you to your profile page in 5 seconds.', {
                     cssClass: 'alert-success',
@@ -102,6 +106,7 @@ export class EditProfileComponent implements OnInit {
                 });
             }
         }).catch(error => {
+            this.processing = false;
             this._flashMessageService.show('An error occurred while trying to update your profile. Please try again later.', {
                 cssClass: 'alert-danger',
                 timeout: 10000

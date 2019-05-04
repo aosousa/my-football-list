@@ -35,6 +35,11 @@
                 </div>
             </div>
         </div>
+        <div *ngIf="processing" class="row form-group">
+            <div class="col-lg-2">
+                <i class="fa fa-spinner fa-spin"></i> Processing...
+            </div>
+        </div>
         <div class="row form-group">
             <div class="col-lg-1">
                 <button class="btn btn-success" type="submit">Send</button>
