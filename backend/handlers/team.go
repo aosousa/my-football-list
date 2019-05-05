@@ -7,8 +7,7 @@ import (
 
 /*GetTeam queries for a Team row in the database through team ID
  * Receives:
- * teamID (int) - ID of the  team
- *
+ * teamID (int) - ID of the team
  *
  * Returns:
  * Team - Team struct found
@@ -19,7 +18,7 @@ import (
 	
 	err := db.QueryRow("SELECT teamId, name, logoUrl FROM tbl_team WHERE teamId = ?", teamID).Scan(&team.TeamID, &team.Name, &team.LogoURL)
 	if err != nil {
-		utils.HandleError("Team", "Get", err)
+		utils.HandleError("Team", "GetTeam", err)
 		return team, err
 	}
 

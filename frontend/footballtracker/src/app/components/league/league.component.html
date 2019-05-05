@@ -1,0 +1,13 @@
+<div class="container">
+    <h1 class="text-center">
+        <span *ngIf="leagueFixtures.league.logoUrl"><img class="header-flag" src="{{ leagueFixtures.league.logoUrl }}"> {{ leagueFixtures.league.name }}</span>
+
+        <span *ngIf="!leagueFixtures.league.logoUrl"><img class="header-flag" src="{{ leagueFixtures.league.flagUrl }}"> {{ leagueFixtures.league.name }}</span>
+    </h1>
+
+    <div class="row form-group">
+        <div class="offset-lg-4 col-lg-4" style="padding: 0 !important;">
+            <flash-messages></flash-messages>
+        </div>
+    </div>
+</div>

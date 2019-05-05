@@ -18,8 +18,8 @@
 
     <cdk-virtual-scroll-viewport itemSize="100">
         <div *cdkVirtualFor="let league of groupedFixtures">
-            <span *ngIf="league.fixtures[0].league.logoUrl"><h3><img class="league-flag" src="{{ league.fixtures[0].league.logoUrl }}"> {{ league.fixtures[0].round }} </h3></span>
-            <span *ngIf="!league.fixtures[0].league.logoUrl"><h3><img class="league-flag" src="{{ league.fixtures[0].league.flagUrl }}"> {{ league.fixtures[0].round }} </h3></span>
+            <span *ngIf="league.fixtures[0].league.logoUrl" [routerLink]="['/league', fixture.league.leagueId]"><h3><img class="league-flag" src="{{ league.fixtures[0].league.logoUrl }}"> {{ league.fixtures[0].round }} </h3></span>
+            <span *ngIf="!league.fixtures[0].league.logoUrl" [routerLink]="['/league', fixture.league.leagueId]"><h3><img class="league-flag" src="{{ league.fixtures[0].league.flagUrl }}"> {{ league.fixtures[0].round }} </h3></span>
             <table class="table table-striped table-bordered row-border">
                 <thead>
                     <tr>

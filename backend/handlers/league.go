@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"database/sql"
+	"errors"
 	"net/http"
+	"strconv"
 
 	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
@@ -90,7 +92,7 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		fixture      m.Fixture
-		fixtures     m.Fixtures
+		fixtures     m.LeagueFixtures
 		responseBody m.HTTPResponse
 		leagueID     string
 	)
@@ -105,10 +107,32 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 
 	// get league ID from URL
 	leagueID = mux.Vars(r)["id"]
+	intLeagueID, err := strconv.Atoi(leagueID)
+	if err != nil {
+		err = errors.New("Error in getting league fixtures. Please try again later.")
+		responseBody.Error = err.Error()
+
+		utils.HandleError("League", "GetLeagueFixtures", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	// get league through ID received in URL
+	league, err := getLeague(intLeagueID)
+	if err != nil {
+		err = errors.New("League does not exist in the platform")
+		responseBody.Error = err.Error()
+
+		utils.HandleError("League", "GetLeagueFixtures", err)
+		SetResponse(w, http.StatusInternalServerError, responseBody)
+		return
+	}
+
+	fixtures.League = league
 
 	rows, err := db.Query(`SELECT tbl_fixture.fixtureId, apiFixtureId, date, league, tbl_league.name, tbl_league.country, tbl_league.season, 
 	tbl_league.logoUrl, flagUrl, round, homeTeam, homeTeam.name, homeTeam.logoUrl, homeTeamGoals, awayTeam, awayTeam.name, awayTeam.logoUrl, 
-	awayTeamGoals, tbl_fixture.status, elapsed, tbl_user_fixture.status 
+	awayTeamGoals, tbl_fixture.status, elapsed, tbl_user_fixture.status, userFixtureId 
 	FROM tbl_fixture 
 	INNER JOIN tbl_league ON tbl_fixture.league = tbl_league.leagueId
 	INNER JOIN tbl_team AS homeTeam ON tbl_fixture.homeTeam = homeTeam.teamId
@@ -126,12 +150,12 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 		var (
 			league                                                                               m.League
 			homeTeam, awayTeam                                                                   m.Team
-			fixtureID, apiFixtureID, homeTeamGoals, awayTeamGoals, elapsed, userFixtureStatusInt int
+			fixtureID, apiFixtureID, homeTeamGoals, awayTeamGoals, elapsed, userFixtureStatusInt, userFixtureIDInt int
 			date, round, status                                                                  string
-			userFixtureStatus                                                                    sql.NullInt64
+			userFixtureStatus, userFixtureID sql.NullInt64
 		)
 
-		err = rows.Scan(&fixtureID, &apiFixtureID, &date, &league.LeagueID, &league.Name, &league.Country, &league.Season, &league.LogoURL, &league.FlagURL, &round, &homeTeam.TeamID, &homeTeam.Name, &homeTeam.LogoURL, &homeTeamGoals, &awayTeam.TeamID, &awayTeam.Name, &awayTeam.LogoURL, &awayTeamGoals, &status, &elapsed, &userFixtureStatus)
+		err = rows.Scan(&fixtureID, &apiFixtureID, &date, &league.LeagueID, &league.Name, &league.Country, &league.Season, &league.LogoURL, &league.FlagURL, &round, &homeTeam.TeamID, &homeTeam.Name, &homeTeam.LogoURL, &homeTeamGoals, &awayTeam.TeamID, &awayTeam.Name, &awayTeam.LogoURL, &awayTeamGoals, &status, &elapsed, &userFixtureStatus, &userFixtureID)
 		if err != nil {
 			utils.HandleError("League", "GetLeagueFixtures", err)
 			SetResponse(w, http.StatusInternalServerError, responseBody)
@@ -140,6 +164,10 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 
 		if userFixtureStatus.Valid {
 			userFixtureStatusInt = int(userFixtureStatus.Int64)
+		}
+
+		if userFixtureID.Valid {
+			userFixtureIDInt = int(userFixtureID.Int64)
 		}
 
 		fixture = m.Fixture{
@@ -155,16 +183,37 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 			Status:            status,
 			Elapsed:           elapsed,
 			UserFixtureStatus: userFixtureStatusInt,
+			UserFixtureID:     userFixtureIDInt,
 		}
 
-		fixtures = append(fixtures, fixture)
+		fixtures.Fixtures = append(fixtures.Fixtures, fixture)
 	}
 
 	responseBody = m.HTTPResponse{
 		Success: true,
 		Data:    fixtures,
-		Rows:    len(fixtures),
+		Rows:    len(fixtures.Fixtures),
 	}
 
 	SetResponse(w, http.StatusOK, responseBody)
+}
+
+/* Queries for a League row in the database through league ID
+ * Receives:
+ * leagueID (int) - ID of the league
+ *
+ * Returns:
+ * League - League struct found
+ * err - Description of error found during execution (or nil otherwise)
+ */
+func getLeague(leagueID int) (m.League, error) {
+	var league m.League
+
+	err := db.QueryRow("SELECT leagueId, name, logoUrl, flagUrl FROM tbl_league WHERE leagueId = ?", leagueID).Scan(&league.LeagueID, &league.Name, &league.LogoURL, &league.FlagURL)
+	if err != nil {
+		utils.HandleError("League", "getLeague", err)
+		return league, err
+	}
+
+	return league, nil
 }

@@ -11,15 +11,15 @@ import * as _ from 'lodash';
 import { FootballService } from '@services/football.service';
 
 @Component({
-    selector: 'team',
-    templateUrl: './team.component.html',
-    styleUrls: ['./team.component.css']
+    selector: 'league',
+    templateUrl: './league.component.html',
+    styleUrls: ['./league.component.css']
 })
-export class TeamComponent implements OnInit {
-    user: any = {};
-    teamFixtures: any = {};
+export class LeagueComponent implements OnInit {
+    user: any = {}
+    leagueFixtures: any = {};
     sessionUserId: number;
-    teamId: number;
+    leagueId: number;
 
     constructor(
         private _titleService: Title,
@@ -30,8 +30,8 @@ export class TeamComponent implements OnInit {
 
     ngOnInit() {
         this.sessionUserId = Number(sessionStorage.getItem('userId'));
-        this.teamId = Number(this._route.snapshot.paramMap.get('id'));
-        this.loadTeamFixtures(this.teamId);
+        this.leagueId = Number(this._route.snapshot.paramMap.get('id'));
+        this.loadLeagueFixtures(this.leagueId);
         this._footballService.getUser(this.sessionUserId).then(response => {
             if (response.success) {
                 this.user = response.data;
@@ -40,26 +40,26 @@ export class TeamComponent implements OnInit {
     }
 
     /**
-     * Load a team's fixtures stored in the database
-     * @param {number} teamID ID of the team
+     * Load a league's fixtures stored in the database
+     * @param {number} leagueID ID of the league
      */
-    loadTeamFixtures(teamID: number) {
-        this._footballService.getTeamFixtures(teamID).then(response => {
+    loadLeagueFixtures(leagueID: number) {
+        this._footballService.getLeagueFixtures(leagueID).then(response => {
             if (response.success && response.rows > 0) {
-                this.teamFixtures = response.data;
-                this._titleService.setTitle("Football Tracker - " + this.teamFixtures.team.name);
+                this.leagueFixtures = response.data;
+                this._titleService.setTitle("Football Tracker - " + this.leagueFixtures.league.name);
             } else {
-                // team exists but has no fixtures
+                // league exists but has no fixtures
             }
         }).catch((error: Response) => {
             this._flashMessagesService.show(error.json().error, {
                 cssClass: 'alert-danger',
                 timeout: 10000
             });
-        });
+        })
     }
 
-    /**
+        /**
      * Set fixture status as "watched" or "want to watch"
      * @param fixtureStatus 
      */
@@ -74,7 +74,7 @@ export class TeamComponent implements OnInit {
 
         this._footballService.createUserFixture(userFixtureStatus).then(response => {
             if (response.success) {
-                this.loadTeamFixtures(this.teamId);
+                this.loadLeagueFixtures(this.leagueId);
             }
         })
     }
@@ -86,7 +86,7 @@ export class TeamComponent implements OnInit {
     deleteUserFixture(userFixtureId) {
         this._footballService.deleteUserFixture(userFixtureId).then(response => {
             if (response.success) {
-                this.loadTeamFixtures(this.teamId);
+                this.loadLeagueFixtures(this.leagueId);
             }
         })
     }

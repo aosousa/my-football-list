@@ -8,6 +8,7 @@ import { ContactComponent } from '@components/contact/contact.component';
 import { EditProfileComponent } from '@components/edit-profile/edit-profile.component';
 import { FixturesComponent } from '@components/fixtures/fixtures.component';
 import { IndexComponent } from '@components/index/index.component';
+import { LeagueComponent } from '@components/league/league.component';
 import { LoginComponent } from '@components/login/login.component';
 import { PrivacyPolicyComponent } from '@components/privacy-policy/privacy-policy.component';
 import { ProfileComponent } from '@components/profile/profile.component';
@@ -81,6 +82,11 @@ const routes: Routes = [
     {
         path: 'team/:id',
         component: TeamComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'league/:id',
+        component: LeagueComponent,
         canActivate: [AuthGuard]
     }
 ]

@@ -24,6 +24,7 @@ import { EditProfileComponent } from '@components/edit-profile/edit-profile.comp
 import { FixturesComponent } from '@components/fixtures/fixtures.component';
 import { FooterComponent } from '@components/footer/footer.component';
 import { IndexComponent } from '@components/index/index.component';
+import { LeagueComponent } from '@components/league/league.component';
 import { LoginComponent } from '@components/login/login.component';
 import { NavbarComponent } from '@components/navbar/navbar.component';
 import { PrivacyPolicyComponent } from '@components/privacy-policy/privacy-policy.component';
@@ -55,6 +56,7 @@ export function ConfigLoader(configService: ConfigService) {
 		FixturesComponent,
 		FooterComponent,
 		IndexComponent,
+		LeagueComponent,
 		LoginComponent,
 		NavbarComponent,
 		PrivacyPolicyComponent,

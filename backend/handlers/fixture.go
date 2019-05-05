@@ -122,7 +122,7 @@ func GetTeamFixtures(w http.ResponseWriter, r *http.Request) {
 			Status:            status,
 			Elapsed:           elapsed,
 			UserFixtureStatus: userFixtureStatusInt,
-			UserFixtureID: userFixtureIDInt,
+			UserFixtureID: 	   userFixtureIDInt,
 		}
 
 		fixtures.Fixtures = append(fixtures.Fixtures, fixture)

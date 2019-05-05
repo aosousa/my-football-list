@@ -229,6 +229,11 @@ a.active,
     width: 25px;
 }
 
+.header-flag {
+    margin-top: -10px;
+    width: 50px;
+}
+
 .score {
     font-weight: bold;
     margin-left: 20px;
