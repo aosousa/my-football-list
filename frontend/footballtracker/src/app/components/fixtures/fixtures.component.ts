@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FlashMessagesService } from 'angular2-flash-messages';
+import  { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 
 // 3rd party
 import * as _ from 'lodash';
@@ -21,12 +22,19 @@ export class FixturesComponent implements OnInit {
     dateVar: string;
     lastFixtureUpdate: string
     sessionUserId: number;
+    dateModel: NgbDateStruct;
+    date: {
+        year: number,
+        month: number,
+        day: number
+    };
 
     constructor(
         private _titleService: Title,
         private _footballService: FootballService,
         private _utilsService: UtilsService,
-        private _flashMessageService: FlashMessagesService
+        private _flashMessageService: FlashMessagesService,
+        private _calendar: NgbCalendar
     ) { }
 
     ngOnInit() {
@@ -110,5 +118,25 @@ export class FixturesComponent implements OnInit {
                 this.loadFixtures(this.dateVar);
             }
         })
+    }
+
+    filterFixturesByDate() {
+        let filterDate = this._utilsService.buildDate(this.dateModel.year, _.padStart(String(this.dateModel.month), 2, '0'), _.padStart(String(this.dateModel.day), 2, '0'));
+        
+        this._footballService.getFixturesByDate(filterDate).then(response => {
+            if (response.success) {
+                if (response.success) {
+                    this.fixtures = response.data;
+                }
+    
+                // group fixtures by league
+                this.groupedFixtures = _(this.fixtures)
+                    .groupBy(x => x.league.leagueId)
+                    .map((fixtures, league) => ({fixtures, league}))
+                    .value();       
+            }
+        }).catch(error => {
+
+        });
     }
 }

@@ -3,6 +3,9 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { PlatformModule } from '@angular/cdk/platform';
 
 import { environment } from 'environments/environment';
 
@@ -68,7 +71,10 @@ export function ConfigLoader(configService: ConfigService) {
 		HttpModule,
 		FormsModule,
 		ReactiveFormsModule,
-		FlashMessagesModule.forRoot()
+		FlashMessagesModule.forRoot(),
+		NgbModule,
+		ScrollingModule,
+		PlatformModule
 	],
 	providers: [
 		AuthGuard,

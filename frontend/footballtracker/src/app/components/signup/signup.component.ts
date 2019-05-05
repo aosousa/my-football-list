@@ -8,7 +8,7 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 import { FootballService } from '@services/football.service';
 
 // import custom validator to validate that password and confirm password fields match
-import { MustMatch, matchingInputsValidator } from '@helpers/must-match.validator';
+import { MustMatch } from '@helpers/must-match.validator';
 
 @Component({
     selector: 'signup',
@@ -28,14 +28,13 @@ export class SignupComponent implements OnInit {
         private _router: Router,
     ) { 
         this.registerForm = this._formBuilder.group({
-            username: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 \'\-]+$')], this.usernameExistenceValidator.bind(this), { updateOn: 'blur' }],
-            email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')], this.emailExistenceValidator.bind(this), { updateOn: 'blur' }],
+            username: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 \'\-]+$')], this.usernameExistenceValidator.bind(this)],
+            email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')], this.emailExistenceValidator.bind(this)],
             password: ['', [Validators.required, Validators.minLength(6)]],
-            confirmPassword: ['', Validators.required, matchingInputsValidator],
+            confirmPassword: ['', Validators.required],
             spoilerMode: ['']
         }, {
-            updateOn: 'blur',
-            // validator: MustMatch('password', 'confirmPassword')
+            validator: MustMatch('password', 'confirmPassword'),
         });
     }
 
@@ -69,10 +68,6 @@ export class SignupComponent implements OnInit {
     }
 
     signup() {
-        console.log(this.registerForm.invalid);
-        console.log(this.registerForm.errors);
-        console.log(this.registerForm.value);
-
         this.submitted = true;
         this.processing = true;
 

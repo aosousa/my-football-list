@@ -22,3 +22,16 @@ th:nth-of-type(3) {
 .action-icon {
     font-size: 1.5em;
 }
+
+label {
+    margin-left: -15px;
+    margin-top: 6px;
+}
+
+input {
+    margin-left: 15px;
+}
+
+cdk-virtual-scroll-viewport { 
+    height: 55vh; 
+}
