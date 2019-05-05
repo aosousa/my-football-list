@@ -73,8 +73,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	fmt.Println(user)
-
 	// check if required fields are empty
 	if utils.IsEmpty(user.Username) || utils.IsEmpty(user.Password) || utils.IsEmpty(user.ConfirmPassword) {
 		err := errors.New("Required field is empty")
