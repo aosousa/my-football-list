@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { Response } from '@angular/http';
+import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 // 3rd party
 import * as _ from 'lodash';
@@ -15,11 +17,17 @@ import { FootballService } from '@services/football.service';
     templateUrl: './team.component.html',
     styleUrls: ['./team.component.css']
 })
-export class TeamComponent implements OnInit {
+export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
+    @ViewChild(DataTableDirective)
+    dtElement: DataTableDirective;
+  
     user: any = {};
-    teamFixtures: any = {};
+    public teamFixtures: any = [];
     sessionUserId: number;
     teamId: number;
+    dtOptions: DataTables.Settings = {};
+    dtTrigger: Subject<any> = new Subject();
+    dataIsLoaded = false;
 
     constructor(
         private _titleService: Title,
@@ -29,6 +37,15 @@ export class TeamComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.dtOptions = {
+            ordering: false,
+            paging: true,
+            pagingType: 'full_numbers',
+            pageLength: 10,
+            processing: true,
+            lengthChange: false,
+        };
+
         this.sessionUserId = Number(sessionStorage.getItem('userId'));
         this.teamId = Number(this._route.snapshot.paramMap.get('id'));
         this.loadTeamFixtures(this.teamId);
@@ -39,6 +56,15 @@ export class TeamComponent implements OnInit {
         });
     }
 
+    ngAfterViewInit(): void {
+        this.dtTrigger.next();
+      }
+
+      ngOnDestroy(): void {
+        // Do not forget to unsubscribe the event
+        this.dtTrigger.unsubscribe();
+      }
+
     /**
      * Load a team's fixtures stored in the database
      * @param {number} teamID ID of the team
@@ -48,13 +74,27 @@ export class TeamComponent implements OnInit {
             if (response.success && response.rows > 0) {
                 this.teamFixtures = response.data;
                 this._titleService.setTitle("Football Tracker - " + this.teamFixtures.team.name);
+
+                this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+                    // Destroy the table first
+                    dtInstance.destroy();
+
+                    // Call the dtTrigger to rerender again
+                    this.dtTrigger.next();
+                });
             } else {
+                this.teamFixtures = response.data;
+
                 // team exists but has no fixtures
+                this._flashMessagesService.show("No matches found", {
+                    cssClass: 'alert-danger',
+                    timeout: 10000000000000
+                });
             }
         }).catch((error: Response) => {
             this._flashMessagesService.show(error.json().error, {
                 cssClass: 'alert-danger',
-                timeout: 10000
+                timeout: 10000000000000
             });
         });
     }

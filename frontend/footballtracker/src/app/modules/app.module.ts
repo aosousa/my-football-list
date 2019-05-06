@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { PlatformModule } from '@angular/cdk/platform';
+import { DataTablesModule } from 'angular-datatables';
 
 import { environment } from 'environments/environment';
 
@@ -70,6 +71,7 @@ export function ConfigLoader(configService: ConfigService) {
 	imports: [
 		AppRoutingModule,
 		BrowserModule,
+		DataTablesModule,
 		HttpModule,
 		FormsModule,
 		ReactiveFormsModule,

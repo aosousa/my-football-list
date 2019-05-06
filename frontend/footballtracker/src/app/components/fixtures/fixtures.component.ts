@@ -69,6 +69,7 @@ export class FixturesComponent implements OnInit {
                 .groupBy(x => x.league.leagueId)
                 .map((fixtures, league) => ({fixtures, league}))
                 .value();
+            console.log(this.groupedFixtures);
         }).catch(error => {
             this._flashMessageService.show('An error occurred while updating the fixtures list.', {
                 cssClass: 'alert-danger',
