@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute,  Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { Response } from '@angular/http';
@@ -33,7 +33,8 @@ export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
         private _titleService: Title,
         private _footballService: FootballService,
         private _flashMessagesService: FlashMessagesService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _router: Router
     ) { }
 
     ngOnInit() {
@@ -129,5 +130,9 @@ export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.loadTeamFixtures(this.teamId);
             }
         })
+    }
+
+    changeTeam(teamID: number) {
+        this._router.navigate(['/team', teamID]);
     }
 }

@@ -6,21 +6,18 @@
     padding-top: 10px;
 }
 
-#teamName {
+#teamName, 
+td > span:not(:first-child) {
     margin-left: 10px;
 }
 
 th:nth-of-type(1) {
-    width: 17% !important;
+    width: 20% !important;
 }
 
 th:nth-of-type(3),
 th:nth-of-type(6) {
     width: 12% !important;
-}
-
-td > span:not(:first-child) {
-    margin-left: 10px;
 }
 
 .score {
@@ -33,4 +30,14 @@ td > span:not(:first-child) {
 
 .action-icon {
     font-size: 1.5em;
+}
+
+
+a {
+    color: #212529;
+    margin-left: 10px;
+}
+
+a:hover {
+    text-decoration: none !important;
 }
