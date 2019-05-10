@@ -69,7 +69,6 @@ export class FixturesComponent implements OnInit {
                 .groupBy(x => x.league.leagueId)
                 .map((fixtures, league) => ({fixtures, league}))
                 .value();
-            console.log(this.groupedFixtures);
         }).catch(error => {
             this._flashMessageService.show('An error occurred while updating the fixtures list.', {
                 cssClass: 'alert-danger',
@@ -93,7 +92,7 @@ export class FixturesComponent implements OnInit {
      * Set fixture status as "watched" or "want to watch"
      * @param fixtureStatus 
      */
-    setUserFixtureStatus(fixtureID, fixtureStatus, userFixtureId) {
+    setUserFixtureStatus(fixtureID, fixtureStatus, userFixtureId, leaguePosition, fixturePosition) {
         let userFixtureID = userFixtureId == 0 ? null : userFixtureId
 
         let userFixtureStatus = {
@@ -104,7 +103,8 @@ export class FixturesComponent implements OnInit {
 
         this._footballService.createUserFixture(userFixtureStatus).then(response => {
             if (response.success) {
-                this.loadFixtures(this.dateVar);
+                this.groupedFixtures[leaguePosition].fixtures[fixturePosition].userFixtureID = response.data.userFixtureId
+                this.groupedFixtures[leaguePosition].fixtures[fixturePosition].userFixtureStatus = fixtureStatus
             }
         })
     }
@@ -113,10 +113,11 @@ export class FixturesComponent implements OnInit {
      * Delete a user fixture status row
      * @param userFixtureId 
      */
-    deleteUserFixture(userFixtureId) {
+    deleteUserFixture(userFixtureId, leaguePosition, fixturePosition) {
         this._footballService.deleteUserFixture(userFixtureId).then(response => {
             if (response.success) {
-                this.loadFixtures(this.dateVar);
+                this.groupedFixtures[leaguePosition].fixtures[fixturePosition].userFixtureID = 0
+                this.groupedFixtures[leaguePosition].fixtures[fixturePosition].userFixtureStatus = 0
             }
         })
     }

@@ -165,12 +165,21 @@ func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		_, err := stmtIns.Exec(userID, userFixture.Fixture, userFixture.Status)
+		res, err := stmtIns.Exec(userID, userFixture.Fixture, userFixture.Status)
 		if err != nil {
 			utils.HandleError("UserFixture", "CreateUserFixture", err)
 			SetResponse(w, http.StatusInternalServerError, responseBody)
 			return
 		}
+
+		id, err := res.LastInsertId()
+        if err != nil {
+			utils.HandleError("UserFixture", "CreateUserFixture", err)
+			SetResponse(w, http.StatusInternalServerError, responseBody)
+			return
+		}
+		
+		userFixture.UserFixtureID = int(id)
 	}
 
 	responseBody = m.HTTPResponse{

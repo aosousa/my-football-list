@@ -104,7 +104,7 @@ export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
      * Set fixture status as "watched" or "want to watch"
      * @param fixtureStatus 
      */
-    setUserFixtureStatus(fixtureID, fixtureStatus, userFixtureId) {
+    setUserFixtureStatus(fixtureID, fixtureStatus, userFixtureId, position) {
         let userFixtureID = userFixtureId == 0 ? null : userFixtureId
 
         let userFixtureStatus = {
@@ -115,7 +115,8 @@ export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this._footballService.createUserFixture(userFixtureStatus).then(response => {
             if (response.success) {
-                this.loadTeamFixtures(this.teamId);
+                this.teamFixtures.fixtures[position].userFixtureStatus = fixtureStatus
+                this.teamFixtures.fixtures[position].userFixtureID = response.data.userFixtureId
             }
         })
     }
@@ -124,10 +125,11 @@ export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
      * Delete a user fixture status row
      * @param userFixtureId 
      */
-    deleteUserFixture(userFixtureId) {
+    deleteUserFixture(userFixtureId, position) {
         this._footballService.deleteUserFixture(userFixtureId).then(response => {
             if (response.success) {
-                this.loadTeamFixtures(this.teamId);
+                this.teamFixtures.fixtures[position].userFixtureStatus = 0
+                this.teamFixtures.fixtures[position].userFixtureID = 0
             }
         })
     }
