@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute,  Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { Response } from '@angular/http';
@@ -27,14 +27,12 @@ export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
     teamId: number;
     dtOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject();
-    dataIsLoaded = false;
 
     constructor(
         private _titleService: Title,
         private _footballService: FootballService,
         private _flashMessagesService: FlashMessagesService,
         private _route: ActivatedRoute,
-        private _router: Router
     ) { }
 
     ngOnInit() {
@@ -59,12 +57,12 @@ export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.dtTrigger.next();
-      }
+    }
 
-      ngOnDestroy(): void {
+    ngOnDestroy(): void {
         // Do not forget to unsubscribe the event
         this.dtTrigger.unsubscribe();
-      }
+    }
 
     /**
      * Load a team's fixtures stored in the database
@@ -80,7 +78,7 @@ export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
                     // Destroy the table first
                     dtInstance.destroy();
 
-                    // Call the dtTrigger to rerender again
+                    // Call the dtTrigger to re-render again
                     this.dtTrigger.next();
                 });
             } else {
@@ -132,9 +130,5 @@ export class TeamComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.teamFixtures.fixtures[position].userFixtureID = 0
             }
         })
-    }
-
-    changeTeam(teamID: number) {
-        this._router.navigate(['/team', teamID]);
     }
 }

@@ -31,3 +31,12 @@ th:nth-of-type(6) {
 .action-icon {
     font-size: 1.5em;
 }
+
+a {
+    color: #212529;
+    margin-left: 10px;
+}
+
+a:hover {
+    text-decoration: none !important;
+}
