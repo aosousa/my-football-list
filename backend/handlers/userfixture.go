@@ -29,7 +29,7 @@ func GetUserFixtures(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		userFixture  m.UserFixture
-		userFixtures m.UserFixtures
+		userFixtures m.UserFixtureResponse
 		responseBody m.HTTPResponse
 		userID       string
 	)
@@ -89,13 +89,17 @@ func GetUserFixtures(w http.ResponseWriter, r *http.Request) {
 			Status:        userFixtureStatus,
 		}
 
-		userFixtures = append(userFixtures, userFixture)
+		if userFixture.Status == 1 {
+			userFixtures.Watched = append(userFixtures.Watched, userFixture)
+		} else {
+			userFixtures.InterestedIn = append(userFixtures.InterestedIn, userFixture)
+		}
 	}
 
 	responseBody = m.HTTPResponse{
 		Success: true,
 		Data:    userFixtures,
-		Rows:    len(userFixtures),
+		Rows:    len(userFixtures.Watched) + len(userFixtures.InterestedIn),
 	}
 
 	SetResponse(w, http.StatusOK, responseBody)

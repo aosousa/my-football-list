@@ -5,3 +5,61 @@ label {
 .container-fluid {
     padding-top: 20px;
 }
+
+.tab-content {
+    margin-top: 2%;
+}
+
+li > a {
+    margin-left: 0 !important;
+}
+
+li > a.active {
+    color: white !important;
+}
+
+li > a:hover {
+    text-decoration: none !important;
+}
+
+.row {
+    padding-top: 10px;
+}
+
+td > span:not(:first-child) {
+    margin-left: 10px;
+}
+
+th:nth-of-type(1) {
+    width: 11% !important;
+}
+
+th:nth-of-type(3),
+th:nth-of-type(6) {
+    width: 5% !important;
+}
+
+th:nth-of-type(7) {
+    width: 10% !important
+}
+
+.score {
+    font-weight: bold;
+    margin-left: 20px !important;
+    margin-right: 20px;
+    text-align: center;
+    width: 10%;
+}
+
+.action-icon {
+    font-size: 1.5em;
+}
+
+a {
+    color: #212529;
+    margin-left: 10px;
+}
+
+a:hover {
+    text-decoration: none !important;
+}

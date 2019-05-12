@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FlashMessagesService } from 'angular2-flash-messages';
-import  { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+import  { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 // 3rd party
 import * as _ from 'lodash';
@@ -34,7 +34,6 @@ export class FixturesComponent implements OnInit {
         private _footballService: FootballService,
         private _utilsService: UtilsService,
         private _flashMessageService: FlashMessagesService,
-        private _calendar: NgbCalendar
     ) { }
 
     ngOnInit() {

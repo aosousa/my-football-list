@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div class="row form-group">
+    <div *ngIf="userExists" class="row form-group">
         <flash-messages></flash-messages>
     </div>
     <div *ngIf="!userExists" class="row">
@@ -22,6 +22,88 @@
         </div>
         <div class="col-lg-9">
             <h1>Fixtures</h1>
+            <ul class="nav nav-pills">
+                <li class="active"><a href="#watched" class="active" data-toggle="tab">Watched</a></li>
+                <li><a href="#interestedIn" data-toggle="tab">Interested In</a></li>
+            </ul>
+            <div class="tab-content clearfix">
+                <div class="tab-pane active" id="watched">
+                    <table class="table table-striped table-bordered row-border" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Home Team</th>
+                                <th>Score</th>
+                                <th>Away Team</th>
+                                <th>Competition</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let fixture of fixturesWatched; let i = index">
+                                <td>{{ fixture.fixture.date }}</td>
+                                <td class="team" [routerLink]="['/team', fixture.fixture.homeTeam.teamId]">
+                                    <img src="{{ fixture.fixture.homeTeam.logoUrl }}" class="team-flag" alt=""> {{ fixture.fixture.homeTeam.name }}
+                                </td>
+                                <td class="score">
+                                    <span *ngIf="fixture.fixture.status == 'NS' || user.spoilerMode" style="text-align: center;">vs</span>
+                                    <span *ngIf="fixture.fixture.status != 'NS' && !user.spoilerMode">{{ fixture.fixture.homeTeamGoals }} - {{ fixture.fixture.awayTeamGoals }}</span>
+                                </td>
+                                <td class="team" [routerLink]="['/team', fixture.fixture.awayTeam.teamId]">
+                                    <img src="{{ fixture.fixture.awayTeam.logoUrl }}" class="team-flag" alt=""> {{ fixture.fixture.awayTeam.name }}
+                                </td>
+                                <td>{{ fixture.fixture.round }}</td>
+                                <td>
+                                    <span *ngIf="!user.spoilerMode">{{ fixture.fixture.status == 'FT' ? 'FT' : fixture.fixture.elapsed + "'" }}</span>
+                                </td>
+                                <td>
+                                    <span *ngIf="fixture.fixture.status == 'FT' && userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 1 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 1, fixture.userFixtureId, i)"><i class="fa fa-check-circle-o action-icon" title="Watched"></i></span>
+                                    <span *ngIf="userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 2 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 2, fixture.userFixtureId, i)"><i class="fa fa-thumbs-up action-icon" title="Want to Watch"></i></span>
+                                    <span *ngIf="fixture.userFixtureId != 0 && userId == sessionUserId" (click)="deleteUserFixture(fixture.userFixtureId, i)"><i class="fa fa-times-circle-o action-icon" title="Delete Status"></i></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane" id="interestedIn">
+                    <table class="table table-striped table-bordered row-border" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Home Team</th>
+                                <th>Score</th>
+                                <th>Away Team</th>
+                                <th>Competition</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let fixture of fixturesInterestedIn; let i = index">
+                                <td>{{ fixture.fixture.date }}</td>
+                                <td class="team" [routerLink]="['/team', fixture.fixture.homeTeam.teamId]">
+                                    <img src="{{ fixture.fixture.homeTeam.logoUrl }}" class="team-flag" alt=""> {{ fixture.fixture.homeTeam.name }}
+                                </td>
+                                <td class="score">
+                                    <span *ngIf="fixture.fixture.status == 'NS' || user.spoilerMode" style="text-align: center;">vs</span>
+                                    <span *ngIf="fixture.fixture.status != 'NS' && !user.spoilerMode">{{ fixture.fixture.homeTeamGoals }} - {{ fixture.fixture.awayTeamGoals }}</span>
+                                </td>
+                                <td class="team" [routerLink]="['/team', fixture.fixture.awayTeam.teamId]">
+                                    <img src="{{ fixture.fixture.awayTeam.logoUrl }}" class="team-flag" alt=""> {{ fixture.fixture.awayTeam.name }}
+                                </td>
+                                <td>{{ fixture.fixture.round }}</td>
+                                <td><span *ngIf="!user.spoilerMode">{{ fixture.fixture.status == 'FT' ? 'FT' : fixture.fixture.elapsed + "'" }}</span></td>
+                                <td>
+                                    <span *ngIf="fixture.fixture.status == 'FT' && userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 1 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 1, fixture.userFixtureId, i)"><i class="fa fa-check-circle-o action-icon" title="Watched"></i></span>
+                                    <span *ngIf="userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 2 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 2, fixture.userFixtureId, i)"><i class="fa fa-thumbs-up action-icon" title="Want to Watch"></i></span>
+                                    <span *ngIf="fixture.userFixtureId != 0 && userId == sessionUserId" (click)="deleteUserFixture(fixture.userFixtureId, i)"><i class="fa fa-times-circle-o action-icon" title="Delete Status"></i></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
