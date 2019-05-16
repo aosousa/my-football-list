@@ -61,6 +61,10 @@ export class ChangePasswordComponent implements OnInit {
         return this.changePasswordForm.controls;
     }
 
+    /**
+     * Change user's password.
+     * Show validation errors if form submission is invalid
+     */
     changePassword() {
         this.submitted = true;
         this.processing = true;

@@ -64,7 +64,11 @@ export class EditProfileComponent implements OnInit {
         return this.editProfileForm.controls;
     }
 
-    emailExistenceValidator(control: AbstractControl) {
+    /**
+     * Check if the user's new chosen e-mail is already taken in the platform
+     * @param {AbstractControl} control 
+     */
+    async emailExistenceValidator(control: AbstractControl) {
         let userInfo = {
             email: control.value
         };
@@ -78,6 +82,10 @@ export class EditProfileComponent implements OnInit {
         });
     }
     
+    /**
+     * Edit user's profile.
+     * Shows validation errors if form submission is invalid.
+     */
     edit() {
         this.submitted = true;
         this.processing = true;
@@ -111,6 +119,6 @@ export class EditProfileComponent implements OnInit {
                 cssClass: 'alert-danger',
                 timeout: 10000
             });
-        })
+        });
     }
 }

@@ -2,11 +2,11 @@ import { Component, OnInit, AfterViewInit, OnDestroy, ViewChildren, QueryList } 
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FlashMessagesService } from 'angular2-flash-messages';
+import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 // Services
 import { FootballService } from '@services/football.service';
-import { DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
 
 @Component({
     selector: 'profile',
@@ -84,6 +84,10 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    /**
+     * Load user's watched and interested in watching fixtures
+     * @param {number} userID ID of the user
+     */
     loadUserFixtures(userID: number) {
         this._footballService.getUserFixtures(userID).then(response => {
             if (response.success) {
@@ -96,6 +100,60 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
                 cssClass: 'alert-danger',
                 timeout: 10000000000000
             });
+        })
+    }
+
+    /**
+     * Set fixture status as "watched" or "want to watch"
+     * @param {number} fixtureID ID of the fixture in the platform
+     * @param {number} fixtureStatus Fixture status (1 = Watched, 2 = Want to Watch)
+     * @param {number} userFixtureId ID of the user fixture row (0 means a new one will be created, otherwise it's an update to the row with the ID received)
+     * @param {number} position Position of the fixture in either the fixturesWatched or fixturesInterestedIn array
+     * @param {number} type Type of fixture status (1 = Watched, 2 = Want to Watch)
+     */
+    setUserFixtureStatus(fixtureID: number, fixtureStatus: number, userFixtureId: number, position: number, type: number) {
+        let userFixtureID = userFixtureId == 0 ? null : userFixtureId
+
+        let userFixtureStatus = {
+            fixtureId: fixtureID,
+            status: fixtureStatus,
+            userFixtureId: userFixtureID
+        }
+
+        this._footballService.createUserFixture(userFixtureStatus).then(response => {
+            if (response.success) {
+                if (type == 1) {
+                    // from watched tab
+                    this.fixturesWatched[position].status = fixtureStatus;
+                    this.fixturesWatched[position].userFixtureId = response.data.userFixtureId;
+                } else {
+                    // from interested in watching tab
+                    this.fixturesInterestedIn[position].status = fixtureStatus;
+                    this.fixturesInterestedIn[position].userFixtureId = response.data.userFixtureId;
+                }
+            }
+        })
+    }
+
+    /**
+     * Delete a user fixture status row
+     * @param {number} userFixtureId ID of the user fixture row to delete
+     * @param {number} position Position of the fixture in either the fixturesWatched or fixturesInterestedIn array
+     * @param {number} type Type of fixture status (1 = Watched, 2 = Want to Watch)
+     */
+    deleteUserFixture(userFixtureId: number, position: number, type: number) {
+        this._footballService.deleteUserFixture(userFixtureId).then(response => {
+            if (response.success) {
+                if (type == 1) {
+                    // from watched tab
+                    this.fixturesWatched[position].status = 0;
+                    this.fixturesWatched[position].userFixtureId = 0;
+                } else {
+                    // from interested in watching tab
+                    this.fixturesInterestedIn[position].status = 0;
+                    this.fixturesInterestedIn[position].userFixtureId = 0;
+                }
+            }
         })
     }
 }

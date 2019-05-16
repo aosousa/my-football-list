@@ -47,7 +47,11 @@ export class SignupComponent implements OnInit {
         return this.registerForm.controls;
     }
 
-     usernameExistenceValidator(control: AbstractControl) {
+    /**
+     * Checks if the user's chosen username is already taken in the platform
+     * @param {AbstractControl} control 
+     */
+    async usernameExistenceValidator(control: AbstractControl) {
         let userInfo = {
             username: control.value
         };
@@ -57,7 +61,11 @@ export class SignupComponent implements OnInit {
         });
     }
 
-    emailExistenceValidator(control: AbstractControl) {
+    /**
+     * Checks if the user's chosen e-mail is already taken in the platform
+     * @param {AbstractControl} control 
+     */
+    async emailExistenceValidator(control: AbstractControl) {
         let userInfo = {
             email: control.value
         };
@@ -67,6 +75,10 @@ export class SignupComponent implements OnInit {
         });
     }
 
+    /**
+     * Add user to the platform.
+     * Shows validation errors if form submission is invalid.
+     */
     signup() {
         this.submitted = true;
         this.processing = true;

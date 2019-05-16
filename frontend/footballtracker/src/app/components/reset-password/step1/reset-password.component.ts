@@ -36,6 +36,10 @@ export class ResetPasswordComponent implements OnInit {
         return this.resetPasswordForm.controls;
     }
 
+    /**
+     * Send user an e-mail with instructions to reset password.
+     * Shows validation errors if form submission is invalid
+     */
     sendResetPasswordEmail() {
         this.submitted = true;
         this.processing = true;

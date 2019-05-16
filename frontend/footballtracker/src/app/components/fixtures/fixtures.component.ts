@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FlashMessagesService } from 'angular2-flash-messages';
-import  { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 // 3rd party
 import * as _ from 'lodash';
@@ -89,9 +89,13 @@ export class FixturesComponent implements OnInit {
     
     /**
      * Set fixture status as "watched" or "want to watch"
-     * @param fixtureStatus 
+     * @param {number} fixtureID ID of the fixture in the platform
+     * @param {number} fixtureStatus Fixture status (1 = Watched, 2 = Want to Watch)
+     * @param {number} userFixtureId ID of the user fixture row (0 means a new one will be created, otherwise it's an update to the row with the ID received)
+     * @param {number} leaguePosition Position of the league in the groupedFixtures array
+     * @param {number} fixturePosition Position of the fixture in the groupedFixtures array
      */
-    setUserFixtureStatus(fixtureID, fixtureStatus, userFixtureId, leaguePosition, fixturePosition) {
+    setUserFixtureStatus(fixtureID: number, fixtureStatus: number, userFixtureId: number, leaguePosition: number, fixturePosition: number) {
         let userFixtureID = userFixtureId == 0 ? null : userFixtureId
 
         let userFixtureStatus = {
@@ -110,9 +114,11 @@ export class FixturesComponent implements OnInit {
 
     /**
      * Delete a user fixture status row
-     * @param userFixtureId 
+     * @param {number} userFixtureId ID of the user fixture row to delete
+     * @param {number} leaguePosition Position of the league in the groupedFixtures array
+     * @param {number} fixturePosition Position of the fixture in the groupedFixtures array
      */
-    deleteUserFixture(userFixtureId, leaguePosition, fixturePosition) {
+    deleteUserFixture(userFixtureId: number, leaguePosition: number, fixturePosition: number) {
         this._footballService.deleteUserFixture(userFixtureId).then(response => {
             if (response.success) {
                 this.groupedFixtures[leaguePosition].fixtures[fixturePosition].userFixtureID = 0
@@ -121,6 +127,9 @@ export class FixturesComponent implements OnInit {
         })
     }
 
+    /**
+     * Update groupedFixtures array to one with the fixtures from the chosen date
+     */
     filterFixturesByDate() {
         let filterDate = this._utilsService.buildDate(this.dateModel.year, _.padStart(String(this.dateModel.month), 2, '0'), _.padStart(String(this.dateModel.day), 2, '0'));
         
@@ -134,7 +143,7 @@ export class FixturesComponent implements OnInit {
                 this.groupedFixtures = _(this.fixtures)
                     .groupBy(x => x.league.leagueId)
                     .map((fixtures, league) => ({fixtures, league}))
-                    .value();       
+                    .value();
             }
         }).catch(error => {
 

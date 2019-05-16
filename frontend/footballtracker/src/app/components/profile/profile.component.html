@@ -58,9 +58,9 @@
                                     <span *ngIf="!user.spoilerMode">{{ fixture.fixture.status == 'FT' ? 'FT' : fixture.fixture.elapsed + "'" }}</span>
                                 </td>
                                 <td>
-                                    <span *ngIf="fixture.fixture.status == 'FT' && userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 1 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 1, fixture.userFixtureId, i)"><i class="fa fa-check-circle-o action-icon" title="Watched"></i></span>
-                                    <span *ngIf="userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 2 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 2, fixture.userFixtureId, i)"><i class="fa fa-thumbs-up action-icon" title="Want to Watch"></i></span>
-                                    <span *ngIf="fixture.userFixtureId != 0 && userId == sessionUserId" (click)="deleteUserFixture(fixture.userFixtureId, i)"><i class="fa fa-times-circle-o action-icon" title="Delete Status"></i></span>
+                                    <span *ngIf="fixture.fixture.status == 'FT' && userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 1 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 1, fixture.userFixtureId, i, 1)"><i class="fa fa-check-circle-o action-icon" title="Watched"></i></span>
+                                    <span *ngIf="userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 2 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 2, fixture.userFixtureId, i, 1)"><i class="fa fa-thumbs-up action-icon" title="Want to Watch"></i></span>
+                                    <span *ngIf="fixture.userFixtureId != 0 && userId == sessionUserId" (click)="deleteUserFixture(fixture.userFixtureId, i, 1)"><i class="fa fa-times-circle-o action-icon" title="Delete Status"></i></span>
                                 </td>
                             </tr>
                         </tbody>
@@ -95,9 +95,9 @@
                                 <td>{{ fixture.fixture.round }}</td>
                                 <td><span *ngIf="!user.spoilerMode">{{ fixture.fixture.status == 'FT' ? 'FT' : fixture.fixture.elapsed + "'" }}</span></td>
                                 <td>
-                                    <span *ngIf="fixture.fixture.status == 'FT' && userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 1 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 1, fixture.userFixtureId, i)"><i class="fa fa-check-circle-o action-icon" title="Watched"></i></span>
-                                    <span *ngIf="userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 2 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 2, fixture.userFixtureId, i)"><i class="fa fa-thumbs-up action-icon" title="Want to Watch"></i></span>
-                                    <span *ngIf="fixture.userFixtureId != 0 && userId == sessionUserId" (click)="deleteUserFixture(fixture.userFixtureId, i)"><i class="fa fa-times-circle-o action-icon" title="Delete Status"></i></span>
+                                    <span *ngIf="fixture.fixture.status == 'FT' && userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 1 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 1, fixture.userFixtureId, i, 2)"><i class="fa fa-check-circle-o action-icon" title="Watched"></i></span>
+                                    <span *ngIf="userId == sessionUserId" [ngClass]="{'selected-option': fixture.status == 2 }" (click)="setUserFixtureStatus(fixture.fixture.fixtureId, 2, fixture.userFixtureId, i, 2)"><i class="fa fa-thumbs-up action-icon" title="Want to Watch"></i></span>
+                                    <span *ngIf="fixture.userFixtureId != 0 && userId == sessionUserId" (click)="deleteUserFixture(fixture.userFixtureId, i, 2)"><i class="fa fa-times-circle-o action-icon" title="Delete Status"></i></span>
                                 </td>
                             </tr>
                         </tbody>

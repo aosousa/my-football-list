@@ -41,10 +41,17 @@ export class NavbarComponent implements OnInit {
         }
     }
 
+    /**
+     * Set new page title
+     * @param {string} newTitle New page title
+     */
     setProperties(newTitle: string) {
         this._titleService.setTitle(newTitle);
     }
 
+    /**
+     * Log user out of the platform
+     */
     logout() {
         this._footballService.logout().then(response => {
             if (response.success) {

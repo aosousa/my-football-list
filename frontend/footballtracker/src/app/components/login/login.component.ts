@@ -39,6 +39,10 @@ export class LoginComponent implements OnInit {
         return this.loginForm.controls;
     }
 
+    /**
+     * Log user in the platform.
+     * Shows validation errors if form submission is invalid.
+     */
     login() {
         this.submitted = true;
         this.processing = true;
@@ -59,7 +63,8 @@ export class LoginComponent implements OnInit {
 
                 this._footballService.changeMessage('true');
                 this._footballService.changeUsernameSource(this.loginForm.value.username);
-                this._router.navigate(['/fixtures']);
+                // this._router.navigate(['/fixtures']);
+                window.location.href = 'http://localhost:4200/fixtures';
             }
         }).catch(error => { 
             this.processing = false;

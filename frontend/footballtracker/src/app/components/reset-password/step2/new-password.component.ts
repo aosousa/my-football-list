@@ -60,6 +60,10 @@ export class NewPasswordComponent implements OnInit {
         return this.newPasswordForm.controls;
     }
 
+    /**
+     * Reset user's password.
+     * Shows validation errors if form submission is invalid.
+     */
     resetPassword() {
         this.submitted = true;
         this.processing = true;

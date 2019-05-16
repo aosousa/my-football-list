@@ -38,6 +38,10 @@ export class ContactComponent implements OnInit {
         return this.contactForm.controls;
     }
 
+    /**
+     * Submit contact form.
+     * Show validation errors if form submission is invalid.
+     */
     submitContact() {
         this.submitted = true;
         this.processing = true;

@@ -91,7 +91,8 @@ export function ConfigLoader(configService: ConfigService) {
 			useFactory: ConfigLoader,
 			deps: [ConfigService],
 			multi: true
-		}
+		},
+		NavbarComponent
 	],
 	bootstrap: [AppComponent]
 })
