@@ -1,14 +1,14 @@
 <div class="container">
     <h1 class="text-center">Fixtures</h1>
     <div class="row">
-        <div class="col-lg-9">
+        <div class="col-lg-8 col-sm-6 col-6">
             <p>Fixtures are every updated every 30 minutes.</p>
             <p>Last update: {{ lastFixtureUpdate }}</p>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-4 col-sm-6 col-6">
             <div class="input-group">
                 <label for="dp"><strong>Filter by date: </strong></label>
-                <input class="form-control" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="dateModel" ngbDatepicker #d="ngbDatepicker" (ngModelChange)="filterFixturesByDate($event)">
+                <input class="form-control" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="dateModel" ngbDatepicker #d="ngbDatepicker" (ngModelChange)="filterFixturesByDate($event)" style="font-size: 15px;">
                 <div class="input-group-append">
                     <button class="fa fa-calendar" (click)="d.toggle()" type="button"></button>
                 </div>
