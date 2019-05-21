@@ -1,35 +1,34 @@
-<nav class="navbar navbar-default navbar-expand-md navbar-fixed-top">
-    <div class="navbar-header">
-        <a routerLink="/" class="navbar-brand">Football Tracker</a>
-    </div>
-	<div class="navbar-collapse">
-        <ul *ngIf="loginStatus == 'true'" class="navbar-nav nav">
-            <li><a routerLink="/fixtures"><span class="fa fa-futbol-o"></span> Fixtures</a></li>
-        </ul>
-        <ul *ngIf="loginStatus == 'true'" class="navbar-nav nav">
-            <li><a routerLink="/contact"><span class="fa fa-envelope-o"></span> Contact</a></li>
-        </ul>
-        <ul *ngIf="loginStatus != 'true'" class="navbar-nav ml-auto">
-            <li style="margin-right: 1em;">
-                <a routerLink="/signup"><span class="fa fa-plus-circle"></span> Sign Up</a>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <a routerLink="/" class="navbar-brand">Football Tracker</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar links -->
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li *ngIf="loginStatus == 'true'" class="nav-item">
+                <a class="nav-link" routerLink="/fixtures"><span class="fa fa-futbol-o"></span> Fixtures</a>
             </li>
-        </ul>
-        <ul *ngIf="loginStatus != 'true'" class="navbar-nav">
-            <li style="margin-right: 1em;">
-                <a routerLink="/login"><span class="fa fa-sign-in"></span> Login</a>
+            <li *ngIf="loginStatus == 'true'" class="nav-item">
+                <a class="nav-link" routerLink="/contact"><span class="fa fa-envelope-o"></span> Contact</a>
             </li>
-        </ul>
-        <ul *ngIf="loginStatus == 'true'" class="navbar-nav ml-auto">
-            <li class="nav-item dropdown">
+            <li *ngIf="loginStatus != 'true'" class="nav-item">
+                <a class="nav-link" routerLink="/signup"><span class="fa fa-plus-circle"></span> Sign Up</a>
+            </li>
+            <li *ngIf="loginStatus != 'true'" class="nav-item">
+                <a class="nav-link" routerLink="/login"><span class="fa fa-sign-in"></span> Login</a>
+            </li>
+            <li *ngIf="loginStatus == 'true'" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="fa fa-user"></span> {{ username }}
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu col-2" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" [routerLink]="['/user', userId]">Profile</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" (click)="logout()"><span class="fa fa-sign-out"></span> Logout</a>
                 </div>
             </li>
         </ul>
-	</div>
+    </div> 
 </nav>

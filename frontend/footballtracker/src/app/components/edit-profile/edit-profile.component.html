@@ -6,7 +6,7 @@
     <form [formGroup]="editProfileForm" (submit)="edit()">
         <div *ngIf="canEdit">
             <div class="row form-group">
-                <div class="offset-lg-4 col-lg-4">
+                <div class="offset-lg-4 col-lg-4 col-sm-6 col-6 offset-sm-3 offset-3">
                     <label for="edit-email" class="control-label">E-mail Address</label>
                     <input type="text" id="edit-email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
                     <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="row form-group">
-                <div class="offset-lg-4 col-lg-5">
+                <div class="offset-lg-4 col-lg-4 col-sm-6 col-6 offset-sm-3 offset-3">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" value="1" id="signup-spoilerMode" formControlName="spoilerMode" [ngClass]="{ 'is-invalid': submitted && f.spoilerMode.errors }" [checked]="user.spoilerMode">
                         <label style="font-weight: normal" for="signup-spoilerMode" class="form-check-label">Hide Results</label>
@@ -30,11 +30,9 @@
                 </div>
             </div>
             <div class="row form-group">
-                <div class="offset-lg-4 col-lg-2 col-md-2 col-sm-2 col-2">
+                <div class="offset-lg-4 offset-md-3 offset-3 col-lg-8 col-md-8 col-sm-8 col-8">
                     <button class="btn btn-success" type="submit">Confirm</button>
-                </div>
-                <div class="col-lg-1 col-md-1 col-sm-1 col-1">
-                    <button class="btn btn-primary" [routerLink]="['/user', userId]">Cancel</button>
+                    <button class="btn btn-primary margin-left-10" [routerLink]="['/user', userId]">Cancel</button>
                 </div>
             </div>
         </div>

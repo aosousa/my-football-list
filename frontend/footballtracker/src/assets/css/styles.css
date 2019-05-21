@@ -38,12 +38,9 @@ div.wrap {
     padding: 10px !important;
 }
 
-.navbar-default {
-    background-color: #27ae60;
+.navbar {
+    background-color: #27ae60 !important;
     border-color: #27ae60;
-    border: 0;
-    -webkit-box-shadow: 0 2px 20px 2px rgba(0, 0, 0, 0.25);
-    box-shadow: 0 2px 20px 2px rgba(0, 0, 0, 0.25);
     color: white;
 }
 
@@ -254,4 +251,8 @@ a.active,
 .team {
     cursor: pointer;
     width: 30%;
+}
+
+.margin-left-10 {
+    margin-left: 10px;
 }
