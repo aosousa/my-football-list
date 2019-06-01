@@ -13,13 +13,13 @@
             <li *ngIf="loginStatus == 'true'" class="nav-item">
                 <a class="nav-link" routerLink="/contact"><span class="fa fa-envelope-o"></span> Contact</a>
             </li>
-            <li *ngIf="loginStatus != 'true'" class="nav-item">
+            <li *ngIf="loginStatus != 'true'" id="signup-nav" class="nav-item">
                 <a class="nav-link" routerLink="/signup"><span class="fa fa-plus-circle"></span> Sign Up</a>
             </li>
             <li *ngIf="loginStatus != 'true'" class="nav-item">
                 <a class="nav-link" routerLink="/login"><span class="fa fa-sign-in"></span> Login</a>
             </li>
-            <li *ngIf="loginStatus == 'true'" class="nav-item dropdown">
+            <li *ngIf="loginStatus == 'true'" id="user-nav" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="fa fa-user"></span> {{ username }}
                 </a>

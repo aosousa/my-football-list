@@ -7,6 +7,10 @@ a:hover {
     text-decoration: none;
 }
 
+ul {
+    width: 100%;
+}
+
 .dropdown-menu {
     margin-left: 0 !important;
     margin-top: 0 !important;
@@ -19,6 +23,13 @@ a:hover {
 
     .nav-link {
         margin-left: 10px;
+    }
+}
+
+@media(min-width: 768px) {
+    #user-nav,
+    #signup-nav {
+        margin-left: auto !important;
     }
 }
 
