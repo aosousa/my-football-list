@@ -70,7 +70,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	// get request body
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.HandleError("Auth", "Signup", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -78,7 +78,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	if ut.IsEmpty(user.Username) || ut.IsEmpty(user.Password) || ut.IsEmpty(user.ConfirmPassword) {
 		err := errors.New("Required field is empty")
 		utils.HandleError("Auth", "Signup", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -86,7 +86,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	if len(user.Password) < 6 || user.Password != user.ConfirmPassword {
 		err := errors.New("Password validations failed")
 		utils.HandleError("Auth", "Signup", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -94,7 +94,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, err := hashPassword(user.Password)
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -103,14 +103,14 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	stmtIns, err := db.Prepare("INSERT INTO tbl_user (username, password, email, spoilerMode) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	result, err := stmtIns.Exec(user.Username, user.Password, user.Email, user.SpoilerMode)
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -118,7 +118,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	userID, err := result.LastInsertId()
 	if err != nil {
 		utils.HandleError("Auth", "Signup", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -126,7 +126,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	session, err := store.Get(r, "session-token")
 	if err != nil {
 		utils.HandleError("Auth", "Login", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -146,7 +146,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		Rows:    1,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*Login is the function that handles a POST /login HTTP request.
@@ -170,20 +170,20 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	session, err := store.Get(r, "session-token")
 	if err != nil {
 		utils.HandleError("Auth", "Login", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.HandleError("Auth", "Login", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	compareUser, err := GetUserByUsername(user.Username)
 	if err != nil {
 		utils.HandleError("Auth", "Login", err)
-		SetResponse(w, http.StatusOK, responseBody)
+		ut.SetResponse(w, http.StatusOK, responseBody)
 		return
 	}
 
@@ -208,7 +208,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Data:    returnUser,
 	}
 
-	SetResponse(w, statusCode, responseBody)
+	ut.SetResponse(w, statusCode, responseBody)
 }
 
 /*Logout is the function that handles a POST /logout HTTP request.
@@ -227,7 +227,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	session, err := store.Get(r, "session-token")
 	if err != nil {
 		utils.HandleError("Auth", "Logout", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -239,7 +239,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	err = session.Save(r, w)
 	if err != nil {
 		utils.HandleError("Auth", "Logout", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -249,7 +249,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		Rows:    0,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*LoggedInUser is used to get information of the session's user
@@ -277,7 +277,7 @@ func LoggedInUser(w http.ResponseWriter, r *http.Request) {
 	session, err := store.Get(r, "session-token")
 	if err != nil {
 		utils.HandleError("Auth", "LoggedInUser", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -291,7 +291,7 @@ func LoggedInUser(w http.ResponseWriter, r *http.Request) {
 		Data:    user,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*IsResetTokenValid checks if the reset password token sent is still valid for use.
@@ -318,7 +318,7 @@ func IsResetTokenValid(w http.ResponseWriter, r *http.Request) {
 	err := db.QueryRow("SELECT userId, username, passwordResetToken, passwordResetTokenValidity, email FROM tbl_user WHERE passwordResetToken = '"+passwordResetToken+"'").Scan(&user.UserID, &user.Username, &user.PasswordResetToken, &user.PasswordResetTokenValidity, &user.Email)
 	if err != nil {
 		utils.HandleError("Auth", "IsResetTokenValid", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -330,7 +330,7 @@ func IsResetTokenValid(w http.ResponseWriter, r *http.Request) {
 		Data:    isValid,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*ResetPassword is used to reset a user's password.
@@ -351,7 +351,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&resetPasswordStruct); err != nil {
 		utils.HandleError("Auth", "ResetPassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -359,7 +359,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	user, err := GetUserByToken(resetPasswordStruct.Token)
 	if err != nil {
 		utils.HandleError("Auth", "ResetPassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -371,7 +371,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 		responseBody.Error = err.Error()
 		utils.HandleError("Auth", "ResetPassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -379,7 +379,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	if len(resetPasswordStruct.Password) < 6 || resetPasswordStruct.Password != resetPasswordStruct.ConfirmPassword {
 		err = errors.New("Password validations failed")
 		utils.HandleError("Auth", "ResetPassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -387,7 +387,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, err := hashPassword(resetPasswordStruct.Password)
 	if err != nil {
 		utils.HandleError("Auth", "ResetPassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -398,14 +398,14 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	SET password = ?, passwordResetToken = ?, passwordResetTokenValidity = ?, updateTime = ? WHERE passwordResetToken = ?`)
 	if err != nil {
 		utils.HandleError("Auth", "ResetPassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	_, err = stmtUpd.Exec(hashedPassword, sql.NullString{}, sql.NullString{}, currentTime, resetPasswordStruct.Token)
 	if err != nil {
 		utils.HandleError("Auth", "ResetPassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -416,7 +416,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 	return
 }
 
@@ -452,7 +452,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	sessionUserID, err := getUserIDFromSession(r)
 	if err != nil {
 		utils.HandleError("Auth", "ChangePassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -464,7 +464,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	// fetch request body
 	if err := json.NewDecoder(r.Body).Decode(&changePasswordStruct); err != nil {
 		utils.HandleError("Auth", "ChangePassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -472,7 +472,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	err = db.QueryRow("SELECT password FROM tbl_user WHERE userId = " + userID).Scan(&user.Password)
 	if err != nil {
 		utils.HandleError("Auth", "ChangePassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -481,7 +481,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		err = errors.New("Current password is wrong.")
 		responseBody.Error = err.Error()
 
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -491,7 +491,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		responseBody.Error = err.Error()
 
 		utils.HandleError("Auth", "ChangePassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -499,7 +499,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, err := hashPassword(changePasswordStruct.NewPassword)
 	if err != nil {
 		utils.HandleError("Auth", "ChangePassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -510,14 +510,14 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	WHERE userId = ?`)
 	if err != nil {
 		utils.HandleError("Auth", "ChangePassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	_, err = stmtUpd.Exec(hashedPassword, currentTime, userID)
 	if err != nil {
 		utils.HandleError("Auth", "ChangePassword", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -526,7 +526,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*Gets the ID of the current logged in user.

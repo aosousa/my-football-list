@@ -38,7 +38,7 @@ func GetAllLeagues(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query("SELECT * FROM tbl_league ORDER BY leagueId ASC")
 	if err != nil {
 		utils.HandleError("League", "GetAllLeagues", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 	}
 
 	for rows.Next() {
@@ -50,7 +50,7 @@ func GetAllLeagues(w http.ResponseWriter, r *http.Request) {
 		err = rows.Scan(&id, &name, &country, &season, &logoURL, &flagURL)
 		if err != nil {
 			utils.HandleError("League", "GetAllLeagues", err)
-			SetResponse(w, http.StatusInternalServerError, responseBody)
+			ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		}
 
 		league = m.League{
@@ -71,7 +71,7 @@ func GetAllLeagues(w http.ResponseWriter, r *http.Request) {
 		Rows:    len(leagues),
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*GetLeagueFixtures queries the database for a league's fixtures.
@@ -102,7 +102,7 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 	userID, err := getUserIDFromSession(r)
 	if err != nil {
 		utils.HandleError("League", "GetLeagueFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -114,7 +114,7 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 		responseBody.Error = err.Error()
 
 		utils.HandleError("League", "GetLeagueFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -125,7 +125,7 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 		responseBody.Error = err.Error()
 
 		utils.HandleError("League", "GetLeagueFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -143,7 +143,7 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 	ORDER BY apiFixtureId ASC`)
 	if err != nil {
 		utils.HandleError("League", "GetLeagueFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -159,7 +159,7 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 		err = rows.Scan(&fixtureID, &apiFixtureID, &date, &league.LeagueID, &league.Name, &league.Country, &league.Season, &league.LogoURL, &league.FlagURL, &round, &homeTeam.TeamID, &homeTeam.Name, &homeTeam.LogoURL, &homeTeamGoals, &awayTeam.TeamID, &awayTeam.Name, &awayTeam.LogoURL, &awayTeamGoals, &status, &elapsed, &userFixtureStatus, &userFixtureID)
 		if err != nil {
 			utils.HandleError("League", "GetLeagueFixtures", err)
-			SetResponse(w, http.StatusInternalServerError, responseBody)
+			ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 			return
 		}
 
@@ -196,7 +196,7 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 		Rows:    len(fixtures.Fixtures),
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /* Queries for a League row in the database through league ID

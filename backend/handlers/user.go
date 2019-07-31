@@ -139,7 +139,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	err := db.QueryRow("SELECT userId, username, email, createTime, spoilerMode FROM tbl_user WHERE userId = "+userID).Scan(&user.UserID, &user.Username, &user.Email, &user.CreateTime, &user.SpoilerMode)
 	if err != nil {
 		utils.HandleError("User", "GetUser", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -149,7 +149,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		Rows:    1,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*UpdateUser updates a user's information.
@@ -182,7 +182,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	sessionUserID, err := getUserIDFromSession(r)
 	if err != nil {
 		utils.HandleError("User", "UpdateUser", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -196,14 +196,14 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	WHERE userId = ?`)
 	if err != nil {
 		utils.HandleError("User", "UpdateUser", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 	}
 	defer stmtUpd.Close()
 
 	// fetch request body and decode into new User struct
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.HandleError("User", "UpdateUser", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -213,7 +213,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	_, err = stmtUpd.Exec(user.Email, user.UpdateTime, user.SpoilerMode, userID)
 	if err != nil {
 		utils.HandleError("User", "UpdateUser", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -222,7 +222,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		Rows:    1,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*CheckUsernameExistence checks if a User with a certain username already exists in the database.
@@ -244,14 +244,14 @@ func CheckUsernameExistence(w http.ResponseWriter, r *http.Request) {
 	// fetch request body and decode into new User struct
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.HandleError("User", "CheckUsernameExistence", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	userCount, err := getUserByUsername(user.Username)
 	if err != nil {
 		utils.HandleError("User", "CheckUsernameExistence", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -260,7 +260,7 @@ func CheckUsernameExistence(w http.ResponseWriter, r *http.Request) {
 		Rows:    int(userCount),
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*CheckEmailExistence checks if a User with a certain email already exists in the database.
@@ -282,14 +282,14 @@ func CheckEmailExistence(w http.ResponseWriter, r *http.Request) {
 	// fetch request body and decode into new User struct
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.HandleError("User", "CheckEmailExistence", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	userCount, err := getUserByEmail(user.Email)
 	if err != nil {
 		utils.HandleError("User", "CheckEmailExistence", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -298,5 +298,5 @@ func CheckEmailExistence(w http.ResponseWriter, r *http.Request) {
 		Rows:    int(userCount),
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }

@@ -3,7 +3,7 @@ module github.com/aosousa/my-football-list
 go 1.12
 
 require (
-	github.com/aosousa/golang-utils v0.0.0-20190731230512-0bc48c5b3db8
+	github.com/aosousa/golang-utils v0.0.0-20190731232832-6a6fb8750a86
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/gorilla/handlers v1.4.0
 	github.com/gorilla/mux v1.7.0

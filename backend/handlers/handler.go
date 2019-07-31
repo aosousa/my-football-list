@@ -197,7 +197,7 @@ func GetLastFixtureUpdate(w http.ResponseWriter, r *http.Request) {
 		Data:    lastFixtureUpdate,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 func SaveLeagues() {
@@ -399,17 +399,4 @@ func SaveFixtures(leagueID string) {
 			_, _ = stmtIns.Exec(apiFixtureID, date, leagueID, round, homeTeamID, homeTeamGoals, awayTeamID, awayTeamGoals, status, elapsed)
 		}
 	}
-}
-
-/*SetResponse sets the response to be sent to the user in any API endpoints.
- * Receives:
- * w (http.ResponseWriter) - Go's HTTP ResponseWriter struct
- * statusCode (int) - HTTP status code of the response
- * body (ut.HTTPResponse) - Body of the HTTP response using a custom struct
- */
-func SetResponse(w http.ResponseWriter, statusCode int, body ut.HTTPResponse) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(body)
-	return
 }

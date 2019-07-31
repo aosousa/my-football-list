@@ -2,6 +2,8 @@ github.com/aosousa/golang-utils v0.0.0-20190617223828-858d939ee6ef h1:/jS2vm0ab1
 github.com/aosousa/golang-utils v0.0.0-20190617223828-858d939ee6ef/go.mod h1:+2jENIbK2BMw5DpaLfnunvciOgy2n/43Jeo/YJJMOrk=
 github.com/aosousa/golang-utils v0.0.0-20190731230512-0bc48c5b3db8 h1:UZPzIdEbgvaz4qmONxP+S02TpiGcVb5HBj8lojj9Lzw=
 github.com/aosousa/golang-utils v0.0.0-20190731230512-0bc48c5b3db8/go.mod h1:+2jENIbK2BMw5DpaLfnunvciOgy2n/43Jeo/YJJMOrk=
+github.com/aosousa/golang-utils v0.0.0-20190731232832-6a6fb8750a86 h1:AfpEGPhSimNxSxpGEl06qI4Jiqj97bABFHmyGDmsXhQ=
+github.com/aosousa/golang-utils v0.0.0-20190731232832-6a6fb8750a86/go.mod h1:+2jENIbK2BMw5DpaLfnunvciOgy2n/43Jeo/YJJMOrk=
 github.com/go-sql-driver/mysql v1.4.1 h1:g24URVg0OFbNUTx9qqY1IRZ9D9z3iPyi5zKhQZpNwpA=
 github.com/go-sql-driver/mysql v1.4.1/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
 github.com/gorilla/context v1.1.1 h1:AWwleXJkX/nhcU9bZSnZoi3h/qGYqQAGhq6zZe/aQW8=

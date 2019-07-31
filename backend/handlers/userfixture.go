@@ -49,7 +49,7 @@ func GetUserFixtures(w http.ResponseWriter, r *http.Request) {
 	ORDER BY fixtureId ASC`)
 	if err != nil {
 		utils.HandleError("UserFixture", "GetUserFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -65,7 +65,7 @@ func GetUserFixtures(w http.ResponseWriter, r *http.Request) {
 		err = rows.Scan(&userFixtureID, &userID, &fixtureID, &userFixtureStatus, &date, &league.LeagueID, &round, &homeTeam.TeamID, &homeTeam.Name, &homeTeam.LogoURL, &homeTeamGoals, &awayTeam.TeamID, &awayTeam.Name, &awayTeam.LogoURL, &awayTeamGoals, &fixtureStatus, &elapsed, &league.Name, &league.Country, &league.LogoURL, &league.FlagURL)
 		if err != nil {
 			utils.HandleError("UserFixture", "GetUserFixtures", err)
-			SetResponse(w, http.StatusInternalServerError, responseBody)
+			ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 			return
 		}
 
@@ -103,7 +103,7 @@ func GetUserFixtures(w http.ResponseWriter, r *http.Request) {
 		Rows:    len(userFixtures.Watched) + len(userFixtures.InterestedIn),
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*CreateUserFixture is used to create or update a tbl_user_fixture row in the database.
@@ -132,14 +132,14 @@ func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
 	userID, err := getUserIDFromSession(r)
 	if err != nil {
 		utils.HandleError("UserFixture", "CreateUserFixture", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	stmtIns, err := db.Prepare("INSERT INTO tbl_user_fixture (userId, fixtureId, status) VALUES (?, ?, ?)")
 	if err != nil {
 		utils.HandleError("UserFixture", "CreateUserFixture", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 	defer stmtIns.Close()
@@ -149,7 +149,7 @@ func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
 	WHERE userId = ? AND fixtureId = ?`)
 	if err != nil {
 		utils.HandleError("UserFixture", "CreateUserFixture", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 	defer stmtUpd.Close()
@@ -157,7 +157,7 @@ func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
 	// fetch request body and decode into new User struct
 	if err := json.NewDecoder(r.Body).Decode(&userFixture); err != nil {
 		utils.HandleError("UserFixture", "CreateUserFixture", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -166,21 +166,21 @@ func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
 		_, err := stmtUpd.Exec(userFixture.Status, userID, userFixture.Fixture)
 		if err != nil {
 			utils.HandleError("UserFixture", "CreateUserFixture", err)
-			SetResponse(w, http.StatusInternalServerError, responseBody)
+			ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 			return
 		}
 	} else {
 		res, err := stmtIns.Exec(userID, userFixture.Fixture, userFixture.Status)
 		if err != nil {
 			utils.HandleError("UserFixture", "CreateUserFixture", err)
-			SetResponse(w, http.StatusInternalServerError, responseBody)
+			ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 			return
 		}
 
 		id, err := res.LastInsertId()
 		if err != nil {
 			utils.HandleError("UserFixture", "CreateUserFixture", err)
-			SetResponse(w, http.StatusInternalServerError, responseBody)
+			ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 			return
 		}
 
@@ -193,7 +193,7 @@ func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
 		Rows:    1,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*DeleteUserFixture is used to delete a tbl_user_fixture row in the database.
@@ -226,14 +226,14 @@ func DeleteUserFixture(w http.ResponseWriter, r *http.Request) {
 	userID, err := getUserIDFromSession(r)
 	if err != nil {
 		utils.HandleError("UserFixture", "DeleteUserFixture", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	intUserID, err := strconv.Atoi(userID)
 	if err != nil {
 		utils.HandleError("UserFixture", "DeleteUserFixture", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -249,14 +249,14 @@ func DeleteUserFixture(w http.ResponseWriter, r *http.Request) {
 	WHERE userFixtureId = ?`)
 	if err != nil {
 		utils.HandleError("UserFixture", "DeleteUserFixture", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	_, err = stmtDel.Exec(userFixtureID)
 	if err != nil {
 		utils.HandleError("UserFixture", "DeleteUserFixture", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -266,5 +266,5 @@ func DeleteUserFixture(w http.ResponseWriter, r *http.Request) {
 		Rows:    1,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }

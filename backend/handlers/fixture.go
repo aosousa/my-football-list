@@ -40,7 +40,7 @@ func GetTeamFixtures(w http.ResponseWriter, r *http.Request) {
 	userID, err := getUserIDFromSession(r)
 	if err != nil {
 		utils.HandleError("Fixture", "GetTeamFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -52,7 +52,7 @@ func GetTeamFixtures(w http.ResponseWriter, r *http.Request) {
 		responseBody.Error = err.Error()
 
 		utils.HandleError("Fixture", "GetTeamFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -63,7 +63,7 @@ func GetTeamFixtures(w http.ResponseWriter, r *http.Request) {
 		responseBody.Error = err.Error()
 
 		utils.HandleError("Fixture", "GetTeamFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -82,7 +82,7 @@ func GetTeamFixtures(w http.ResponseWriter, r *http.Request) {
 	ORDER BY date DESC`)
 	if err != nil {
 		utils.HandleError("Fixture", "GetTeamFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -98,7 +98,7 @@ func GetTeamFixtures(w http.ResponseWriter, r *http.Request) {
 		err = rows.Scan(&fixtureID, &apiFixtureID, &date, &league.LeagueID, &league.Name, &league.Country, &league.Season, &league.LogoURL, &league.FlagURL, &round, &homeTeam.TeamID, &homeTeam.Name, &homeTeam.LogoURL, &homeTeamGoals, &awayTeam.TeamID, &awayTeam.Name, &awayTeam.LogoURL, &awayTeamGoals, &status, &elapsed, &userFixtureStatus, &userFixtureID)
 		if err != nil {
 			utils.HandleError("Fixture", "GetTeamFixtures", err)
-			SetResponse(w, http.StatusInternalServerError, responseBody)
+			ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 			return
 		}
 
@@ -135,7 +135,7 @@ func GetTeamFixtures(w http.ResponseWriter, r *http.Request) {
 		Rows:    len(fixtures.Fixtures),
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }
 
 /*GetDateFixtures queries the database for fixtures in a given date.
@@ -166,7 +166,7 @@ func GetDateFixtures(w http.ResponseWriter, r *http.Request) {
 	userID, err := getUserIDFromSession(r)
 	if err != nil {
 		utils.HandleError("Fixture", "GetDateFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -187,7 +187,7 @@ func GetDateFixtures(w http.ResponseWriter, r *http.Request) {
 	ORDER BY apiFixtureId ASC`)
 	if err != nil {
 		utils.HandleError("Fixture", "GetDateFixtures", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -203,7 +203,7 @@ func GetDateFixtures(w http.ResponseWriter, r *http.Request) {
 		err = rows.Scan(&fixtureID, &apiFixtureID, &date, &league.LeagueID, &league.Name, &league.Country, &league.Season, &league.LogoURL, &league.FlagURL, &round, &homeTeam.TeamID, &homeTeam.Name, &homeTeam.LogoURL, &homeTeamGoals, &awayTeam.TeamID, &awayTeam.Name, &awayTeam.LogoURL, &awayTeamGoals, &status, &elapsed, &userFixtureStatus, &userFixtureID)
 		if err != nil {
 			utils.HandleError("Fixture", "GetTeamFixtures", err)
-			SetResponse(w, http.StatusInternalServerError, responseBody)
+			ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 			return
 		}
 
@@ -240,5 +240,5 @@ func GetDateFixtures(w http.ResponseWriter, r *http.Request) {
 		Rows:    len(fixtures),
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 }

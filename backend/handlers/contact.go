@@ -36,7 +36,7 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 	// get request body
 	if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
 		utils.HandleError("Contact", "SendEmail", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -44,7 +44,7 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 	if ut.IsEmpty(contact.Type) || ut.IsEmpty(contact.Subject) || ut.IsEmpty(contact.Message) {
 		err := errors.New("Required fields are empty")
 		utils.HandleError("Contact", "SendEmail", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -52,7 +52,7 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 	err := utils.SendContactEmail(to, contact.Type, contact.Subject, contact.Message)
 	if err != nil {
 		utils.HandleError("Contact", "SendEmail", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -60,7 +60,7 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 	return
 }
 
@@ -82,7 +82,7 @@ func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&resetPasswordStruct); err != nil {
 		utils.HandleError("Contact", "SendResetPasswordEmail", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -90,7 +90,7 @@ func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 	user, err := GetUserByEmail(resetPasswordStruct.Email)
 	if err != nil {
 		utils.HandleError("Contact", "SendResetPasswordEmail", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -102,7 +102,7 @@ func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 
 		responseBody.Error = err.Error()
 		utils.HandleError("Contact", "SendResetPasswordEmail", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -120,14 +120,14 @@ func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 	WHERE email = ?`)
 	if err != nil {
 		utils.HandleError("Contact", "SendResetPasswordEmail", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
 	_, err = stmtUpd.Exec(userPasswordResetToken, userPasswordResetTokenValidity, currentTime, resetPasswordStruct.Email)
 	if err != nil {
 		utils.HandleError("Contact", "SendResetPasswordEmail", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -135,7 +135,7 @@ func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 	err = utils.SendResetPasswordEmail(user.Email, userPasswordResetToken)
 	if err != nil {
 		utils.HandleError("Contact", "SendEmail", err)
-		SetResponse(w, http.StatusInternalServerError, responseBody)
+		ut.SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
 
@@ -144,6 +144,6 @@ func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 	}
 
-	SetResponse(w, http.StatusOK, responseBody)
+	ut.SetResponse(w, http.StatusOK, responseBody)
 	return
 }
