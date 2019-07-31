@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	ut "github.com/aosousa/golang-utils"
 	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
 )
@@ -17,7 +18,7 @@ import (
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func SendEmail(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -29,7 +30,7 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		contact      m.Contact
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 	)
 
 	// get request body
@@ -40,7 +41,7 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if required fields are empty
-	if utils.IsEmpty(contact.Type) || utils.IsEmpty(contact.Subject) || utils.IsEmpty(contact.Message) {
+	if ut.IsEmpty(contact.Type) || ut.IsEmpty(contact.Subject) || ut.IsEmpty(contact.Message) {
 		err := errors.New("Required fields are empty")
 		utils.HandleError("Contact", "SendEmail", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
@@ -55,7 +56,7 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 	}
 
@@ -70,13 +71,13 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 	var (
 		resetPasswordStruct m.ResetPassword
-		responseBody m.HTTPResponse
-		validTokenExists bool
+		responseBody        ut.HTTPResponse
+		validTokenExists    bool
 	)
 
 	if err := json.NewDecoder(r.Body).Decode(&resetPasswordStruct); err != nil {
@@ -106,12 +107,12 @@ func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// create UUID to use as reset token
-	userPasswordResetToken := utils.GenerateRandomToken();
+	userPasswordResetToken := utils.GenerateRandomToken()
 
 	// add validity of 1 hour to token
 	currentTime := time.Now().Format("2006-01-02 15:04:05")
 	currentTimeParsed, _ := time.Parse("2006-01-02 15:04:05", currentTime)
-	userPasswordResetTokenValidity := currentTimeParsed.Add(1*time.Hour)
+	userPasswordResetTokenValidity := currentTimeParsed.Add(1 * time.Hour)
 
 	// update user in database - including updateTime field
 	stmtUpd, err := db.Prepare(`UPDATE tbl_user
@@ -139,7 +140,7 @@ func SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// set response body
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 	}
 

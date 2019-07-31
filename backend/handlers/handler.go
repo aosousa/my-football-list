@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
+	ut "github.com/aosousa/golang-utils"
 	"github.com/aosousa/my-football-list/models"
-	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jasonlvhit/gocron"
@@ -74,7 +74,7 @@ func UpdateFixtures() {
 		currentDate, queryURL string
 	)
 
-	lastFixtureUpdate = utils.GetCurrentDateTime()
+	lastFixtureUpdate = ut.GetCurrentDateTime()
 	unformattedCurrentDate := time.Now()
 	currentDate = unformattedCurrentDate.Format("2006-01-02")
 	// currentDate = "2019-04-14"
@@ -182,7 +182,7 @@ func UpdateFixtures() {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func GetLastFixtureUpdate(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -192,7 +192,7 @@ func GetLastFixtureUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBody := m.HTTPResponse{
+	responseBody := ut.HTTPResponse{
 		Success: true,
 		Data:    lastFixtureUpdate,
 	}
@@ -405,9 +405,9 @@ func SaveFixtures(leagueID string) {
  * Receives:
  * w (http.ResponseWriter) - Go's HTTP ResponseWriter struct
  * statusCode (int) - HTTP status code of the response
- * body (m.HTTPResponse) - Body of the HTTP response using a custom struct
+ * body (ut.HTTPResponse) - Body of the HTTP response using a custom struct
  */
-func SetResponse(w http.ResponseWriter, statusCode int, body models.HTTPResponse) {
+func SetResponse(w http.ResponseWriter, statusCode int, body ut.HTTPResponse) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(body)

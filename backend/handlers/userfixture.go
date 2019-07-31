@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	ut "github.com/aosousa/golang-utils"
 	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
 	"github.com/gorilla/mux"
@@ -17,7 +18,7 @@ import (
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func GetUserFixtures(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -30,7 +31,7 @@ func GetUserFixtures(w http.ResponseWriter, r *http.Request) {
 	var (
 		userFixture  m.UserFixture
 		userFixtures m.UserFixtureResponse
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 		userID       string
 	)
 
@@ -96,7 +97,7 @@ func GetUserFixtures(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    userFixtures,
 		Rows:    len(userFixtures.Watched) + len(userFixtures.InterestedIn),
@@ -112,7 +113,7 @@ func GetUserFixtures(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -124,7 +125,7 @@ func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		userFixture  m.UserFixtureRequest
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 	)
 
 	// get user ID from session
@@ -177,16 +178,16 @@ func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
 		}
 
 		id, err := res.LastInsertId()
-        if err != nil {
+		if err != nil {
 			utils.HandleError("UserFixture", "CreateUserFixture", err)
 			SetResponse(w, http.StatusInternalServerError, responseBody)
 			return
 		}
-		
+
 		userFixture.UserFixtureID = int(id)
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    userFixture,
 		Rows:    1,
@@ -202,7 +203,7 @@ func CreateUserFixture(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func DeleteUserFixture(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -213,7 +214,7 @@ func DeleteUserFixture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var (
-		responseBody  m.HTTPResponse
+		responseBody  ut.HTTPResponse
 		fixtureUserID int
 		userFixtureID string
 	)
@@ -259,7 +260,7 @@ func DeleteUserFixture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    true,
 		Rows:    1,

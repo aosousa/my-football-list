@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	ut "github.com/aosousa/golang-utils"
 	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
 	"github.com/gorilla/mux"
@@ -45,7 +46,7 @@ func GetUserByEmail(email string) (m.User, error) {
 		utils.HandleError("User", "GetUserByEmail", err)
 		return u, err
 	}
-	
+
 	return u, nil
 }
 
@@ -116,7 +117,7 @@ func getUserByEmail(email string) (int8, error) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -128,7 +129,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		user         m.User
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 		userID       string
 	)
 
@@ -142,7 +143,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    user,
 		Rows:    1,
@@ -158,7 +159,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -170,7 +171,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		user         m.User
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 		userID       string
 	)
 
@@ -207,7 +208,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get current date time for user's UpdateTime field
-	user.UpdateTime = utils.GetCurrentDateTime()
+	user.UpdateTime = ut.GetCurrentDateTime()
 
 	_, err = stmtUpd.Exec(user.Email, user.UpdateTime, user.SpoilerMode, userID)
 	if err != nil {
@@ -216,7 +217,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Rows:    1,
 	}
@@ -231,13 +232,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func CheckUsernameExistence(w http.ResponseWriter, r *http.Request) {
 	var (
 		userCount    int8
 		user         m.User
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 	)
 
 	// fetch request body and decode into new User struct
@@ -254,7 +255,7 @@ func CheckUsernameExistence(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Rows:    int(userCount),
 	}
@@ -269,13 +270,13 @@ func CheckUsernameExistence(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func CheckEmailExistence(w http.ResponseWriter, r *http.Request) {
 	var (
 		userCount    int8
 		user         m.User
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 	)
 
 	// fetch request body and decode into new User struct
@@ -292,7 +293,7 @@ func CheckEmailExistence(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Rows:    int(userCount),
 	}

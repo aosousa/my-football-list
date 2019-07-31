@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	ut "github.com/aosousa/golang-utils"
 	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
 	"github.com/gorilla/mux"
@@ -18,7 +19,7 @@ import (
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func GetAllLeagues(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -31,7 +32,7 @@ func GetAllLeagues(w http.ResponseWriter, r *http.Request) {
 	var (
 		league       m.League
 		leagues      m.Leagues
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 	)
 
 	rows, err := db.Query("SELECT * FROM tbl_league ORDER BY leagueId ASC")
@@ -64,7 +65,7 @@ func GetAllLeagues(w http.ResponseWriter, r *http.Request) {
 		leagues = append(leagues, league)
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    leagues,
 		Rows:    len(leagues),
@@ -80,7 +81,7 @@ func GetAllLeagues(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -93,7 +94,7 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 	var (
 		fixture      m.Fixture
 		fixtures     m.LeagueFixtures
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 		leagueID     string
 	)
 
@@ -148,11 +149,11 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var (
-			league                                                                               m.League
-			homeTeam, awayTeam                                                                   m.Team
+			league                                                                                                 m.League
+			homeTeam, awayTeam                                                                                     m.Team
 			fixtureID, apiFixtureID, homeTeamGoals, awayTeamGoals, elapsed, userFixtureStatusInt, userFixtureIDInt int
-			date, round, status                                                                  string
-			userFixtureStatus, userFixtureID sql.NullInt64
+			date, round, status                                                                                    string
+			userFixtureStatus, userFixtureID                                                                       sql.NullInt64
 		)
 
 		err = rows.Scan(&fixtureID, &apiFixtureID, &date, &league.LeagueID, &league.Name, &league.Country, &league.Season, &league.LogoURL, &league.FlagURL, &round, &homeTeam.TeamID, &homeTeam.Name, &homeTeam.LogoURL, &homeTeamGoals, &awayTeam.TeamID, &awayTeam.Name, &awayTeam.LogoURL, &awayTeamGoals, &status, &elapsed, &userFixtureStatus, &userFixtureID)
@@ -189,7 +190,7 @@ func GetLeagueFixtures(w http.ResponseWriter, r *http.Request) {
 		fixtures.Fixtures = append(fixtures.Fixtures, fixture)
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    fixtures,
 		Rows:    len(fixtures.Fixtures),

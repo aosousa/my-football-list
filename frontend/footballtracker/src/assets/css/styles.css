@@ -256,3 +256,7 @@ a.active,
 .margin-left-10 {
     margin-left: 10px;
 }
+
+.date-note {
+    margin-bottom: -3%;
+}

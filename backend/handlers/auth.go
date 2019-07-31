@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
 
+	ut "github.com/aosousa/golang-utils"
 	m "github.com/aosousa/my-football-list/models"
 	"github.com/aosousa/my-football-list/utils"
 )
@@ -21,7 +22,7 @@ var (
 	store = sessions.NewCookieStore(key)
 )
 
-/* Checks the the validity of a password hash.
+/* Checks the validity of a password hash.
  *
  * Receives:
  * password (string) - Password hash saved in the database
@@ -57,13 +58,13 @@ func hashPassword(password string) (string, error) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func Signup(w http.ResponseWriter, r *http.Request) {
 	var (
 		user           m.User
 		hashedPassword string
-		responseBody   m.HTTPResponse
+		responseBody   ut.HTTPResponse
 	)
 
 	// get request body
@@ -72,9 +73,9 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		SetResponse(w, http.StatusInternalServerError, responseBody)
 		return
 	}
-	
+
 	// check if required fields are empty
-	if utils.IsEmpty(user.Username) || utils.IsEmpty(user.Password) || utils.IsEmpty(user.ConfirmPassword) {
+	if ut.IsEmpty(user.Username) || ut.IsEmpty(user.Password) || ut.IsEmpty(user.ConfirmPassword) {
 		err := errors.New("Required field is empty")
 		utils.HandleError("Auth", "Signup", err)
 		SetResponse(w, http.StatusInternalServerError, responseBody)
@@ -139,7 +140,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		Username: user.Username,
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    returnUser,
 		Rows:    1,
@@ -156,14 +157,14 @@ func Signup(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func Login(w http.ResponseWriter, r *http.Request) {
 	var (
 		user, returnUser m.User
 		loginSuccess     bool
 		statusCode       int
-		responseBody     m.HTTPResponse
+		responseBody     ut.HTTPResponse
 	)
 
 	session, err := store.Get(r, "session-token")
@@ -202,7 +203,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		loginSuccess, statusCode = false, 401
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: loginSuccess,
 		Data:    returnUser,
 	}
@@ -218,10 +219,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func Logout(w http.ResponseWriter, r *http.Request) {
-	var responseBody m.HTTPResponse
+	var responseBody ut.HTTPResponse
 
 	session, err := store.Get(r, "session-token")
 	if err != nil {
@@ -242,7 +243,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    true,
 		Rows:    0,
@@ -258,7 +259,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func LoggedInUser(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication before proceeding
@@ -269,7 +270,7 @@ func LoggedInUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var (
-		responseBody m.HTTPResponse
+		responseBody ut.HTTPResponse
 		user         m.User
 	)
 
@@ -285,7 +286,7 @@ func LoggedInUser(w http.ResponseWriter, r *http.Request) {
 		Username: session.Values["username"].(string),
 	}
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    user,
 	}
@@ -300,12 +301,12 @@ func LoggedInUser(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func IsResetTokenValid(w http.ResponseWriter, r *http.Request) {
 	var (
 		user               m.User
-		responseBody       m.HTTPResponse
+		responseBody       ut.HTTPResponse
 		passwordResetToken string
 		isValid            bool
 	)
@@ -324,7 +325,7 @@ func IsResetTokenValid(w http.ResponseWriter, r *http.Request) {
 	// check if a valid token already exists
 	isValid = utils.CheckPasswordResetTokenValidity(user.PasswordResetTokenValidity.String)
 
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 		Data:    isValid,
 	}
@@ -339,13 +340,13 @@ func IsResetTokenValid(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	var (
 		resetPasswordStruct m.ResetPassword
-		responseBody m.HTTPResponse
-		tokenIsValid bool
+		responseBody        ut.HTTPResponse
+		tokenIsValid        bool
 	)
 
 	if err := json.NewDecoder(r.Body).Decode(&resetPasswordStruct); err != nil {
@@ -391,7 +392,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// save new password, and save passwordResetToken and passwordResetTokenValidity as nulls again
-	currentTime := utils.GetCurrentDateTime()
+	currentTime := ut.GetCurrentDateTime()
 
 	stmtUpd, err := db.Prepare(`UPDATE tbl_user
 	SET password = ?, passwordResetToken = ?, passwordResetTokenValidity = ?, updateTime = ? WHERE passwordResetToken = ?`)
@@ -411,7 +412,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	// TODO: send email confirming password change
 
 	// set response body
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 	}
 
@@ -426,7 +427,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
  *
  * Response
  * Content-Type: application/json
- * Body: m.HTTPResponse
+ * Body: ut.HTTPResponse
  */
 func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	// check user's authentication status before proceeding
@@ -437,10 +438,10 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var (
-		user m.User
+		user                 m.User
 		changePasswordStruct m.ChangePasswordRequest
-		responseBody m.HTTPResponse
-		userID string
+		responseBody         ut.HTTPResponse
+		userID               string
 	)
 
 	// get user ID from URL
@@ -476,7 +477,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	passwordMatches := checkPasswordHash(changePasswordStruct.CurrentPassword, user.Password)
-	if (!passwordMatches) {
+	if !passwordMatches {
 		err = errors.New("Current password is wrong.")
 		responseBody.Error = err.Error()
 
@@ -502,7 +503,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currentTime := utils.GetCurrentDateTime()
+	currentTime := ut.GetCurrentDateTime()
 
 	stmtUpd, err := db.Prepare(`UPDATE tbl_user
 	SET password = ?, updateTime = ?
@@ -521,7 +522,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// set response body
-	responseBody = m.HTTPResponse{
+	responseBody = ut.HTTPResponse{
 		Success: true,
 	}
 
