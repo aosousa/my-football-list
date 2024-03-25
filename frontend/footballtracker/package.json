@@ -28,7 +28,7 @@
     "datatables.net-dt": "^1.10.19",
     "hammerjs": "^2.0.8",
     "jquery": "^3.5.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "popper.js": "^1.14.7",
     "rxjs": "~6.3.3",
     "tar": "^4.4.18",
