@@ -10,5 +10,6 @@ require (
 	github.com/gorilla/sessions v1.1.3
 	github.com/jasonlvhit/gocron v0.0.0-20190121134850-6771d4b492ba
 	github.com/rs/cors v1.6.0
-	golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c
+	golang.org/x/crypto v0.17.0
+	google.golang.org/appengine v1.6.8 // indirect
 )
